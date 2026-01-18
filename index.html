@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Renaissance & Scientific Revolution Quiz – Instant Feedback</title>
+<title>Renaissance Quiz – Instant Feedback (16 Questions)</title>
 <style>
   body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -71,10 +71,10 @@
 </head>
 <body>
 
-<h1>Renaissance & Scientific Discoveries Quiz – Instant Feedback</h1>
+<h1>Renaissance Quiz – Instant Feedback (16 Questions)</h1>
 <p style="text-align:center; color:#555; font-style:italic; margin-bottom:2em;">
-  14 Questions covering the shift to human-centred thinking, scientific developments, key figures & discoveries<br>
-  (Based on textbook pages about Renaissance science, medicine, astronomy & the transition from God-centred to human-centred worldview)
+  Select an answer → get immediate feedback!<br>
+  (Based on textbook pages covering the Renaissance causes, features, people & developments)
 </p>
 
 <div id="quiz"></div>
@@ -85,138 +85,100 @@
 <script>
 const questions = [
   {
-    q: "1. What does the word 'Gothic' refer to in the context of Renaissance architecture?",
-    options: [
-      "a. A style developed by the Goths during the Roman Empire",
-      "b. A negative term used by Renaissance people for medieval 'barbarian' architecture",
-      "c. A new style invented in the Renaissance",
-      "d. Church architecture only used in Germany"
-    ],
-    correct: 1,
-    answerText: "A negative term used by Renaissance people for medieval 'barbarian' architecture"
-  },
-  {
-    q: "2. Who proposed the heliocentric theory, stating that the Sun is the centre of the universe?",
-    options: ["a. Galileo Galilei", "b. Andreas Vesalius", "c. Nicolaus Copernicus", "d. Girolamo Fracastoro"],
+    q: "1. Where did the Renaissance first begin?",
+    options: ["a. France", "b. England", "c. Italian Peninsula (esp. Florence)", "d. Germany"],
     correct: 2,
-    answerText: "Nicolaus Copernicus"
+    answerText: "Italian Peninsula (especially Florence)"
   },
   {
-    q: "3. In his book 'On the Revolutions of the Heavenly Spheres', Copernicus challenged:",
-    options: [
-      "a. The Church's authority on religious matters only",
-      "b. The geocentric model that placed Earth at the centre of the universe",
-      "c. The idea of gravity",
-      "d. The existence of planets"
-    ],
-    correct: 1,
-    answerText: "The geocentric model that placed Earth at the centre of the universe"
-  },
-  {
-    q: "4. Who later used telescopes to observe the universe and supported heliocentrism?",
-    options: ["a. Andreas Vesalius", "b. Galileo Galilei", "c. Girolamo Fracastoro", "d. Nicolaus Copernicus"],
-    correct: 1,
-    answerText: "Galileo Galilei"
-  },
-  {
-    q: "5. The Church integrated many ancient Greek classics with theology because it believed they helped explain:",
-    options: [
-      "a. The solar system",
-      "b. The universe with God as its centre",
-      "c. Human diseases",
-      "d. Modern technology"
-    ],
-    correct: 1,
-    answerText: "The universe with God as its centre"
-  },
-  {
-    q: "6. What was the main reason the Church prohibited the dissection of human bodies in the Middle Ages?",
-    options: [
-      "a. It was too expensive",
-      "b. The human body was considered sacred (God's creation)",
-      "c. There were no tools available",
-      "d. Doctors were not interested"
-    ],
-    correct: 1,
-    answerText: "The human body was considered sacred (God's creation)"
-  },
-  {
-    q: "7. Who carried out dissections of dead human bodies and described the human skeleton, muscles, organs, etc. in detail?",
-    options: ["a. Copernicus", "b. Galileo", "c. Andreas Vesalius", "d. Girolamo Fracastoro"],
-    correct: 2,
-    answerText: "Andreas Vesalius"
-  },
-  {
-    q: "8. Which Renaissance scholar proved the real causes of diseases by experiments and showed that bacteria spread decayed matter?",
-    options: ["a. Andreas Vesalius", "b. Girolamo Fracastoro", "c. Nicolaus Copernicus", "d. Galileo Galilei"],
-    correct: 1,
-    answerText: "Girolamo Fracastoro"
-  },
-  {
-    q: "9. The main change in thinking during the Renaissance and Scientific Revolution was from:",
-    options: [
-      "a. Human-centred to God-centred",
-      "b. God-centred to human-centred",
-      "c. Earth-centred to Moon-centred",
-      "d. Religious to military thinking"
-    ],
-    correct: 1,
-    answerText: "God-centred to human-centred"
-  },
-  {
-    q: "10. Renaissance scholars began to verify ancient theories through:",
-    options: [
-      "a. Only reading Church translations",
-      "b. Observation, research, experiments and the spirit of scientific inquiry",
-      "c. Accepting everything the Church taught",
-      "d. Ignoring ancient Greek classics"
-    ],
-    correct: 1,
-    answerText: "Observation, research, experiments and the spirit of scientific inquiry"
-  },
-  {
-    q: "11. The Church translated many ancient Greek classics, but Renaissance scholars found:",
-    options: [
-      "a. Many differences from the Church's translations",
-      "b. The originals were exactly the same as Church versions",
-      "c. The originals were written in Latin only",
-      "d. No differences at all"
-    ],
+    q: "2. The word 'Renaissance' means:",
+    options: ["a. New birth / revival", "b. Enlightenment", "c. Religious reform", "d. Industrial revolution"],
     correct: 0,
-    answerText: "Many differences from the Church's translations"
+    answerText: "New birth / revival (of classical Greco-Roman learning)"
   },
   {
-    q: "12. Heliocentrism refers to the idea that:",
-    options: [
-      "a. Earth is the centre of the universe",
-      "b. The Sun is the centre of the universe",
-      "c. The Moon is the centre",
-      "d. There is no centre"
-    ],
-    correct: 1,
-    answerText: "The Sun is the centre of the universe"
+    q: "3. Which family played the most important role in supporting artists and the development of the Renaissance in Florence?",
+    options: ["a. Borgia", "b. Sforza", "c. Medici", "d. Visconti"],
+    correct: 2,
+    answerText: "Medici (especially Cosimo and Lorenzo de' Medici)"
   },
   {
-    q: "13. The Renaissance spirit of inquiry challenged:",
-    options: [
-      "a. Only medieval art styles",
-      "b. Traditional Church authority on science and the universe",
-      "c. Trade and commerce",
-      "d. The use of Latin language"
-    ],
-    correct: 1,
-    answerText: "Traditional Church authority on science and the universe"
+    q: "4. Which events helped bring ancient Greek and Roman knowledge back to Europe?",
+    options: ["a. The Crusades only", "b. Fall of Constantinople (1453) only", "c. Both the Crusades and Fall of Constantinople", "d. The Black Death"],
+    correct: 2,
+    answerText: "Both the Crusades and Fall of Constantinople"
   },
   {
-    q: "14. Discoveries in astronomy (Copernicus, Galileo) and medicine (Vesalius, Fracastoro) were part of:",
-    options: [
-      "a. The decline of science",
-      "b. The development of natural science during the Renaissance",
-      "c. The return to medieval ideas",
-      "d. Only religious reforms"
-    ],
+    q: "5. Who is regarded as the 'Father of Humanism'?",
+    options: ["a. Giovanni Boccaccio", "b. Francesco Petrarch", "c. Dante Alighieri", "d. William Shakespeare"],
     correct: 1,
-    answerText: "The development of natural science during the Renaissance"
+    answerText: "Francesco Petrarch"
+  },
+  {
+    q: "6. Which of the following is NOT a major literary development of the Renaissance?",
+    options: ["a. Rise of novels (Boccaccio's Decameron)", "b. Famous English plays (Shakespeare)", "c. Epic poems written mostly in Latin (Dante)", "d. Use of native languages instead of only Latin"],
+    correct: 2,
+    answerText: "Dante wrote The Divine Comedy in Italian vernacular (not mostly Latin)"
+  },
+  {
+    q: "7. Which city was NOT a major wealthy Italian trading centre during the early Renaissance?",
+    options: ["a. Florence", "b. Venice", "c. Genoa", "d. Paris"],
+    correct: 3,
+    answerText: "Paris (the key centres were Italian city-states)"
+  },
+  {
+    q: "8. Humanism during the Renaissance mainly focused on:",
+    options: ["a. Strict obedience to Church teachings", "b. Human potential, reason, and classical learning", "c. Only religious subjects", "d. Military conquest"],
+    correct: 1,
+    answerText: "Human potential, reason, and classical learning"
+  },
+  {
+    q: "9. Which plague affected Florence and is described in Boccaccio's Decameron?",
+    options: ["a. Smallpox", "b. The Black Death", "c. Cholera", "d. Typhus"],
+    correct: 1,
+    answerText: "The Black Death"
+  },
+  {
+    q: "10. Who wrote 'The Divine Comedy' describing Heaven, Hell and Purgatory?",
+    options: ["a. Petrarch", "b. Boccaccio", "c. Dante Alighieri", "d. Shakespeare"],
+    correct: 2,
+    answerText: "Dante Alighieri"
+  },
+  {
+    q: "11. The rise of wealthy merchants and bankers in Italian city-states mainly contributed to the Renaissance by:",
+    options: ["a. Starting wars with the Church", "b. Supporting artists, scholars and new buildings", "c. Banning ancient Greek books", "d. Moving the capital to Rome"],
+    correct: 1,
+    answerText: "Supporting artists, scholars and new buildings (patronage)"
+  },
+  {
+    q: "12. During the late Middle Ages, the Church's influence weakened because of:",
+    options: ["a. The failure of the Crusades", "b. Corruption and the refusal of some rulers to pay taxes to the Pope", "c. Both A and B", "d. The rise of universities only"],
+    correct: 2,
+    answerText: "Both A and B"
+  },
+  {
+    q: "13. Which of these is a famous work by William Shakespeare?",
+    options: ["a. The Decameron", "b. Romeo and Juliet", "c. The Divine Comedy", "d. Canzoniere"],
+    correct: 1,
+    answerText: "Romeo and Juliet"
+  },
+  {
+    q: "14. The Crusades encouraged the exchange of knowledge mainly between:",
+    options: ["a. Europe and the Arab world", "b. Europe and China", "c. Europe and the Americas", "d. Only between European countries"],
+    correct: 0,
+    answerText: "Europe and the Arab world"
+  },
+  {
+    q: "15. From the 12th century onwards, the rise of universities in Europe helped the Renaissance by:",
+    options: ["a. Teaching only religious subjects", "b. Allowing students to study medicine, law, philosophy and ancient texts", "c. Closing down trade routes", "d. Banning humanism"],
+    correct: 1,
+    answerText: "Allowing students to study medicine, law, philosophy and ancient texts"
+  },
+  {
+    q: "16. Which statement best describes the main change in thinking during the Renaissance?",
+    options: ["a. From God-centred to human-centred thinking", "b. From science to superstition", "c. From trade to farming", "d. From cities to rural life"],
+    correct: 0,
+    answerText: "From God-centred to human-centred thinking"
   }
 ];
 
@@ -264,6 +226,7 @@ function checkAnswer(qIndex, selected) {
     fb.className = "feedback wrong";
   }
 
+  // Disable options after selection
   const radios = document.querySelectorAll(input[name="q${qIndex}"]);
   radios.forEach(r => r.disabled = true);
 
@@ -276,13 +239,13 @@ function showFinalScore() {
   let msg = `You scored \( {score}/ \){total} (${percent}%)! `;
 
   if (percent >= 85) {
-    msg += "Outstanding! 🎉 You're mastering the Scientific Revolution!";
+    msg += "Outstanding! 🎉 You're a Renaissance master!";
   } else if (percent >= 65) {
-    msg += "Great work! 👍 Strong grasp of Renaissance science!";
+    msg += "Great job! 👍 Solid understanding!";
   } else if (percent >= 40) {
-    msg += "Good effort! 📚 Review Copernicus, Vesalius & the shift to human-centred thinking!";
+    msg += "Good effort! 📚 Review a bit more and you'll do even better!";
   } else {
-    msg += "Nice try! 💪 Keep going — the key figures and discoveries will become clearer!";
+    msg += "Nice try! 💪 Keep studying the key causes, people and developments.";
   }
 
   document.getElementById("finalResult").textContent = msg;
