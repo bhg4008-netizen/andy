@@ -362,7 +362,7 @@
         
         <div class="controls">
             <div class="control-group">
-                <button id="show-all" class="active">全部字彙 (128)</button>
+                <button id="show-all" class="active">全部字彙 (191)</button>
                 <button id="show-quiz">隨機測驗</button>
                 <button id="reset-cards">重設所有卡片</button>
             </div>
@@ -375,7 +375,7 @@
         </div>
         
         <div class="stats">
-            已載入 <span id="word-count">128</span> 個字彙 • 點擊下方分類或直接瀏覽所有單詞
+            已載入 <span id="word-count">191</span> 個字彙 • 點擊下方分類或直接瀏覽所有單詞
         </div>
         
         <div class="categories-grid" id="categories-container">
@@ -406,7 +406,7 @@
     </div>
 
     <script>
-        // 字彙資料庫 - 已整合新詞彙並修正解釋
+        // 字彙資料庫 - 已整合所有您詢問過的字彙
         const vocabulary = {
             // 1. 古代文明、帝國與歷史事件
             "ancient-civilizations": {
@@ -428,10 +428,14 @@
                     { english: "Yuezhi", chinese: "月氏" },
                     { english: "Kushan", chinese: "貴霜（帝國）" },
                     { english: "Scythian", chinese: "斯基泰人" },
+                    { english: "Scyth", chinese: "斯基泰人（簡稱）" },
                     { english: "Abbasid", chinese: "阿拔斯王朝（伊斯蘭黃金時代）" },
                     { english: "Himyar", chinese: "希木葉爾（古代葉門的猶太王國）" },
                     { english: "Trojan War", chinese: "特洛伊戰爭（希臘神話與歷史衝突）" },
-                    { english: "Saracens", chinese: "薩拉森人（中世紀歐洲對穆斯林的統稱）" }
+                    { english: "Saracens", chinese: "薩拉森人（中世紀歐洲對穆斯林的統稱）" },
+                    { english: "Avar", chinese: "阿瓦爾人（古代歐亞遊牧民族）" },
+                    { english: "Phylarch", chinese: "部落首領、族長（古希臘/阿拉伯部落領袖）" },
+                    { english: "Islam and the An Shi Rebellion", chinese: "伊斯蘭和安史之亂的關係（伊斯蘭教與唐朝叛亂的歷史關聯）" }
                 ]
             },
             
@@ -449,7 +453,7 @@
                     { english: "Khuzistan", chinese: "胡齊斯坦（伊朗省份）" },
                     { english: "Dunhuang", chinese: "敦煌" },
                     { english: "Xuanquan", chinese: "懸泉置" },
-                    { english: "Basra", chinese: "巴斯拉" },
+                    { english: "Basra", chinese: "巴斯拉（伊拉克城市）" },
                     { english: "Aqaba", chinese: "阿卡巴" },
                     { english: "Ctesiphon", chinese: "泰西封（古波斯首都）" },
                     { english: "Pannonia", chinese: "潘諾尼亞" },
@@ -458,7 +462,9 @@
                     { english: "Balkh", chinese: "巴爾赫（阿富汗『城市之母』，祆教與佛教中心）" },
                     { english: "Sindh", chinese: "信德省（巴基斯坦省份）" },
                     { english: "Steppe", chinese: "草原（廣闊乾草原地帶）" },
-                    { english: "Oases", chinese: "綠洲（沙漠水源地）" }
+                    { english: "Oases", chinese: "綠洲（沙漠水源地）" },
+                    { english: "Samarra", chinese: "薩邁拉（伊拉克城市，阿拔斯王朝曾定都於此）" },
+                    { english: "Nishapur", chinese: "尼沙普爾（伊朗城市，歷史文化中心）" }
                 ]
             },
             
@@ -472,7 +478,10 @@
                     { english: "Euripides", chinese: "歐里庇得斯" },
                     { english: "Pontius Pilate", chinese: "本丟·彼拉多" },
                     { english: "Uthman", chinese: "奧斯曼（伊斯蘭教第三任哈里發）" },
-                    { english: "Mazdak", chinese: "瑪茲達克（薩珊波斯宗教改革者）" }
+                    { english: "Mazdak", chinese: "瑪茲達克（薩珊波斯宗教改革者）" },
+                    { english: "Ptolemy", chinese: "托勒密（古希臘天文學家、地理學家）" },
+                    { english: "Bukhtishu", chinese: "布赫提舒（波斯醫學世家，服務於阿拔斯宮廷）" },
+                    { english: "Li Xian", chinese: "李賢（唐朝皇子，章懷太子）" }
                 ]
             },
             
@@ -483,14 +492,19 @@
                     { english: "Gnosticism", chinese: "諾斯底主義（強調內在祕傳知識的二元論思想）" },
                     { english: "Manichaeism", chinese: "摩尼教（波斯二元論宗教，明教）" },
                     { english: "Passover", chinese: "逾越節（猶太教紀念出埃及的節日）" },
+                    { english: "The Feast of Passover", chinese: "逾越節慶典" },
                     { english: "Umma", chinese: "烏瑪（全球穆斯林信仰共同體）" },
                     { english: "Hadith", chinese: "聖訓（記錄先知穆罕默德言行的典籍）" },
                     { english: "Ascetic/Asceticism", chinese: "苦行/禁慾主義（透過自我克制追求靈性）" },
                     { english: "Proselyte", chinese: "歸信者（改宗者）" },
                     { english: "Proselytizing", chinese: "傳教（勸人改宗的活動）" },
+                    { english: "Proselytising", chinese: "傳教（英式拼寫）" },
                     { english: "Council of Chalcedon", chinese: "加爾西頓公會議（公元451年，確立基督『神人二性』）" },
                     { english: "Hijra", chinese: "遷徙（特指先知穆罕默德從麥加遷往麥地那）" },
-                    { english: "Haram", chinese: "聖地（伊斯蘭教中神聖不可侵犯之地）" }
+                    { english: "Haram", chinese: "聖地（伊斯蘭教中神聖不可侵犯之地）" },
+                    { english: "Jibril", chinese: "吉卜利里（伊斯蘭教中的天使，即加百列）" },
+                    { english: "Uighur", chinese: "維吾爾（民族，部分歷史上信奉摩尼教、佛教，後改信伊斯蘭教）" },
+                    { english: "Liturgy", chinese: "禮拜儀式（特指基督教聖餐禮儀）" }
                 ]
             },
             
@@ -506,7 +520,9 @@
                     { english: "Inscription", chinese: "銘文" },
                     { english: "Folio", chinese: "對開本/頁碼" },
                     { english: "Rhapsodic", chinese: "狂想曲式的/狂喜的" },
-                    { english: "Vibrancy", chinese: "活力" }
+                    { english: "Vibrancy", chinese: "活力" },
+                    { english: "Sanskrit", chinese: "梵文（古印度語言，原拼寫Sanskirt已修正）" },
+                    { english: "Philistinism", chinese: "庸俗、無教養（指缺乏文化修養）" }
                 ]
             },
             
@@ -531,7 +547,17 @@
                     { english: "Coinage", chinese: "貨幣鑄造/新詞創造" },
                     { english: "Mints", chinese: "造幣廠/薄荷糖/鑄造" },
                     { english: "Scribe", chinese: "抄寫員" },
-                    { english: "Agate", chinese: "瑪瑙" }
+                    { english: "Agate", chinese: "瑪瑙" },
+                    { english: "Dirhams", chinese: "迪拉姆（阿拉伯貨幣單位，歷史上廣泛使用）" },
+                    { english: "Quartz", chinese: "石英" },
+                    { english: "Stoneware", chinese: "石器，陶器（介於陶器與瓷器之間）" },
+                    { english: "Kiln", chinese: "窯（燒製陶瓷的爐子）" },
+                    { english: "Porcelain", chinese: "瓷器" },
+                    { english: "Scorpions", chinese: "蠍子" },
+                    { english: "Quince", chinese: "榲桲（一種水果）" },
+                    { english: "Pistachios", chinese: "開心果" },
+                    { english: "Jetsam", chinese: "投棄物（船難時拋棄的貨物）" },
+                    { english: "Pasture", chinese: "牧場、草地" }
                 ]
             },
             
@@ -575,14 +601,25 @@
                     { english: "Plethora", chinese: "過剩" },
                     { english: "Gusto", chinese: "熱情" },
                     { english: "Crucible", chinese: "坩堝/嚴峻考驗" },
-                    { english: "Repercussions", chinese: "後果" },
+                    { english: "Repercussions", chinese: "後果（原拼寫repercssions已修正）" },
                     { english: "Abdicating", chinese: "退位" },
                     { english: "Soliciting", chinese: "徵求/拉客" },
                     { english: "Repudiate", chinese: "拒絕承認" },
                     { english: "Scabs", chinese: "結痂/工賊" },
                     { english: "Mule", chinese: "騾子/穆勒鞋/錢騾" },
                     { english: "Beholder", chinese: "觀察者/眼魔" },
-                    { english: "Rearguard", chinese: "後衛/守舊派" }
+                    { english: "Rearguard", chinese: "後衛/守舊派" },
+                    { english: "Overarching", chinese: "支配一切的、包羅萬象的" },
+                    { english: "Effaced", chinese: "抹去、消除" },
+                    { english: "Translucent", chinese: "半透明的" },
+                    { english: "Palatial", chinese: "宮殿般的、宏偉的" },
+                    { english: "Defacing", chinese: "污損、損壞外觀（原拼寫defacting已修正）" },
+                    { english: "Crumbled", chinese: "崩潰、破碎" },
+                    { english: "Modus vivendi", chinese: "暫時妥協、權宜之計（拉丁語）" },
+                    { english: "Unmolested", chinese: "未受干擾的、平靜的" },
+                    { english: "Denunciations", chinese: "譴責、告發" },
+                    { english: "Promiscuously", chinese: "雜亂地、混亂地" },
+                    { english: "Denuded", chinese: "剝奪、使裸露" }
                 ]
             },
             
