@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歷史地理詞彙互動溫習系統 - 地圖視覺化</title>
+    <!-- Leaflet 地圖庫 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            grid-template-rows: 80px 1fr;
+            height: 100vh;
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        button.active {
+            background-color: #2ecc71;
+        }
+        
+        .sidebar {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-box {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .category-btn {
+            background-color: #f1f2f6;
+            color: var(--dark-color);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .category-btn:hover {
+            background-color: #dfe4ea;
+        }
+        
+        .category-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .words-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 20px;
+        }
+        
+        .word-item {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .word-item:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .word-item.active {
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .word-english {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .word-chinese {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .word-category {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            background-color: #ecf0f1;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .map-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--border-radius);
+        }
+        
+        .map-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            max-width: 300px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+        
+        .map-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .map-description {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 80px 400px 1fr;
+            }
+            
+            .map-container {
+                grid-row: 2;
+            }
+            
+            .sidebar {
+                grid-row: 3;
+            }
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            max-width: 200px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+        
+        .legend-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>歷史地理詞彙互動溫習系統</h1>
+                <p class="subtitle">地圖視覺化 • 點擊地點查看詳細資訊</p>
+            </div>
+            <div class="controls">
+                <button id="reset-view">重置地圖視圖</button>
+                <button id="show-all">顯示所有地點</button>
+            </div>
+        </header>
+        
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <input type="text" id="search-input" class="search-box" placeholder="搜尋歷史地點...">
+                <div class="categories" id="categories-container">
+                    <!-- 分類按鈕會由JavaScript動態生成 -->
+                </div>
+                <div class="stats">
+                    <div>已載入 <span id="word-count">0</span> 個地點</div>
+                    <div>點擊地點查看詳細資訊</div>
+                </div>
+            </div>
+            <div class="words-list" id="words-list">
+                <!-- 單詞列表會由JavaScript動態生成 -->
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="legend">
+                <div class="legend-title">地圖圖例</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <span>古代文明與帝國</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <span>地理與地名</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                    <span>歷史人物與學者</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f39c12;"></div>
+                    <span>宗教相關地點</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                    <span>其他重要地點</span>
+                </div>
+            </div>
+            <div class="map-info" id="map-info" style="display: none;">
+                <button class="close-btn" id="close-info">×</button>
+                <div class="map-title" id="info-title"></div>
+                <div class="map-description" id="info-description"></div>
+                <div class="stats">
+                    <div id="info-category"></div>
+                    <div id="info-era"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 歷史地理地點資料庫 - 包含座標與詳細資訊
+        const historicalLocations = [
+            // 古代文明與帝國 (紅色標記)
+            {
+                id: 1,
+                english: "Mesopotamia",
+                chinese: "美索不達米亞",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "兩河流域文明搖籃，位於幼發拉底河與底格里斯河之間，現今伊拉克境內。蘇美、巴比倫、亞述等古代文明的發源地。",
+                lat: 33.0,
+                lng: 44.0,
+                era: "公元前3500年-公元前539年",
+                color: "#e74c3c"
+            },
+            {
+                id: 2,
+                english: "Babylon",
+                chinese: "巴比倫",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "古代美索不達米亞重要城市，漢摩拉比法典的發源地，以空中花園聞名。位於現今伊拉克巴格達以南約85公里處。",
+                lat: 32.5421,
+                lng: 44.4211,
+                era: "公元前1894年-公元前539年",
+                color: "#e74c3c"
+            },
+            {
+                id: 3,
+                english: "Ctesiphon",
+                chinese: "泰西封",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "安息帝國與薩珊王朝的首都，以泰西封拱門聞名，是世界上最大的單跨磚造拱門。位於現今伊拉克巴格達東南約35公里處。",
+                lat: 33.0936,
+                lng: 44.5808,
+                era: "公元前247年-公元637年",
+                color: "#e74c3c"
+            },
+            {
+                id: 4,
+                english: "Bactria",
+                chinese: "大夏（巴克特里亞）",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "古代中亞地區，位於興都庫什山脈以北，阿姆河以南。希臘-巴克特里亞王國與貴霜帝國的重要中心，絲路貿易樞紐。",
+                lat: 36.75,
+                lng: 66.9,
+                era: "公元前250年-公元125年",
+                color: "#e74c3c"
+            },
+            {
+                id: 5,
+                english: "Sasanians",
+                chinese: "薩珊王朝",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "最後一個波斯帝國，首都泰西封。曾與羅馬帝國及拜占庭帝國長期爭霸，對中亞與西亞文化有深遠影響。",
+                lat: 32.0,
+                lng: 53.0,
+                era: "公元224年-651年",
+                color: "#e74c3c"
+            },
+            {
+                id: 6,
+                english: "Himyar",
+                chinese: "希木葉爾王國",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "古代葉門的猶太王國，控制紅海與印度洋貿易，以香料貿易和先進水利工程聞名。位於現今葉門西部。",
+                lat: 15.0,
+                lng: 44.0,
+                era: "公元前110年-公元525年",
+                color: "#e74c3c"
+            },
+            
+            // 地理與地名 (藍色標記)
+            {
+                id: 7,
+                english: "Tigris",
+                chinese: "底格里斯河",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "西亞重要河流，與幼發拉底河共同定義美索不達米亞地區。發源於土耳其東部，流經土耳其、敘利亞、伊拉克，最終與幼發拉底河匯合成阿拉伯河。",
+                lat: 33.0,
+                lng: 44.5,
+                era: "自然地理特徵",
+                color: "#3498db"
+            },
+            {
+                id: 8,
+                english: "Euphrates",
+                chinese: "幼發拉底河",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "西亞最長河流，與底格里斯河共同孕育美索不達米亞文明。發源於土耳其，流經敘利亞、伊拉克，是古代灌溉農業的重要水源。",
+                lat: 35.0,
+                lng: 40.5,
+                era: "自然地理特徵",
+                color: "#3498db"
+            },
+            {
+                id: 9,
+                english: "Caspian Sea",
+                chinese: "裡海",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "世界最大內陸水域，位於歐亞交界處。古代是絲綢之路北線的重要交通障礙與貿易樞紐，沿岸有多個古代文明。",
+                lat: 42.0,
+                lng: 50.0,
+                era: "自然地理特徵",
+                color: "#3498db"
+            },
+            {
+                id: 10,
+                english: "Dunhuang",
+                chinese: "敦煌",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "絲綢之路上的重要咽喉，以莫高窟千佛洞聞名。位於中國甘肅省，是古代東西方文化交流的關鍵節點。",
+                lat: 40.14,
+                lng: 94.66,
+                era: "公元前111年建立",
+                color: "#3498db"
+            },
+            {
+                id: 11,
+                english: "Basra",
+                chinese: "巴斯拉",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "伊拉克第二大城市，重要港口。古代是阿拉伯帝國的重要貿易中心，也是《一千零一夜》中辛巴達的故鄉。",
+                lat: 30.5,
+                lng: 47.8,
+                era: "公元636年建立",
+                color: "#3498db"
+            },
+            {
+                id: 12,
+                english: "Hijaz",
+                chinese: "漢志",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "沙烏地阿拉伯西部區域，包含伊斯蘭教兩大聖城麥加與麥地那。是伊斯蘭教的發源地，每年吸引數百萬穆斯林朝覲。",
+                lat: 23.0,
+                lng: 39.0,
+                era: "歷史地區",
+                color: "#3498db"
+            },
+            {
+                id: 13,
+                english: "Steppe",
+                chinese: "歐亞草原",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "橫跨歐亞大陸的廣闊乾草原地帶，是古代游牧民族（如匈奴、斯基泰人、蒙古人）的活動區域，對歐亞歷史有深遠影響。",
+                lat: 50.0,
+                lng: 70.0,
+                era: "自然地理特徵",
+                color: "#3498db"
+            },
+            
+            // 歷史人物與學者相關地點 (綠色標記)
+            {
+                id: 14,
+                english: "Sima Qian",
+                chinese: "司馬遷故里",
+                category: "historical-figures",
+                categoryName: "歷史人物與學者",
+                description: "司馬遷（約公元前145年-前86年）的故鄉。司馬遷是中國史學之父，撰寫了《史記》，開創紀傳體史書體例。",
+                lat: 35.2,
+                lng: 110.2,
+                era: "西漢時期",
+                color: "#2ecc71"
+            },
+            
+            // 宗教相關地點 (黃色標記)
+            {
+                id: 15,
+                english: "Yathrib (Medina)",
+                chinese: "雅里布（麥地那）",
+                category: "religion-philosophy",
+                categoryName: "宗教相關地點",
+                description: "麥地那的古稱，伊斯蘭教第二大聖城。公元622年，先知穆罕默德從麥加遷徙至此，建立了第一個穆斯林社區。",
+                lat: 24.47,
+                lng: 39.61,
+                era: "公元622年遷徙",
+                color: "#f39c12"
+            },
+            {
+                id: 16,
+                english: "Balkh",
+                chinese: "巴爾赫",
+                category: "religion-philosophy",
+                categoryName: "宗教相關地點",
+                description: "阿富汗北部古城，被譽為「城市之母」。古代是瑣羅亞斯德教（祆教）與佛教的重要中心，也是絲路貿易重鎮。",
+                lat: 36.76,
+                lng: 66.9,
+                era: "公元前6世紀起",
+                color: "#f39c12"
+            },
+            
+            // 其他重要地點 (紫色標記)
+            {
+                id: 17,
+                english: "Trojan War Site",
+                chinese: "特洛伊遺址",
+                category: "culture-arts",
+                categoryName: "其他重要地點",
+                description: "傳說中特洛伊戰爭的發生地，位於現今土耳其西北部。2026年最新考古發現了3500年前的彈弓石證據。",
+                lat: 39.9573,
+                lng: 26.2387,
+                era: "約公元前12世紀",
+                color: "#9b59b6"
+            },
+            {
+                id: 18,
+                english: "Abbasid Baghdad",
+                chinese: "阿拔斯王朝巴格達",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "阿拔斯王朝時期的巴格達，伊斯蘭黃金時代的中心。建立了著名的「智慧宮」，匯集了當時最優秀的學者。2026年伊拉克正推動遺址修復計畫。",
+                lat: 33.3152,
+                lng: 44.3661,
+                era: "公元762年-1258年",
+                color: "#e74c3c"
+            },
+            {
+                id: 19,
+                english: "Pannonia",
+                chinese: "潘諾尼亞",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "古代羅馬帝國的行省，位於多瑙河流域。曾是羅馬帝國防禦北方蠻族的重要邊境地區。",
+                lat: 47.0,
+                lng: 18.0,
+                era: "羅馬帝國時期",
+                color: "#3498db"
+            },
+            {
+                id: 20,
+                english: "Oxus River",
+                chinese: "阿姆河（古稱藥殺水）",
+                category: "geography",
+                categoryName: "地理與地名",
+                description: "中亞重要河流，古代稱為藥殺水。發源於帕米爾高原，流經阿富汗、塔吉克、土庫曼和烏茲別克，歷史上是大夏地區的命脈。",
+                lat: 37.0,
+                lng: 66.0,
+                era: "自然地理特徵",
+                color: "#3498db"
+            }
+        ];
+
+        // 應用狀態
+        let currentCategory = 'all';
+        let currentSearch = '';
+        let activeLocationId = null;
+        let map = null;
+        let markers = [];
+
+        // DOM元素
+        const categoriesContainer = document.getElementById('categories-container');
+        const wordsList = document.getElementById('words-list');
+        const searchInput = document.getElementById('search-input');
+        const wordCountElement = document.getElementById('word-count');
+        const mapElement = document.getElementById('map');
+        const mapInfo = document.getElementById('map-info');
+        const infoTitle = document.getElementById('info-title');
+        const infoDescription = document.getElementById('info-description');
+        const infoCategory = document.getElementById('info-category');
+        const infoEra = document.getElementById('info-era');
+
+        // 初始化應用
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            renderCategories();
+            renderLocationsList();
+            setupEventListeners();
+            updateWordCount();
+        });
+
+        // 初始化地圖
+        function initMap() {
+            // 創建地圖，中心設在中東地區（大多數歷史地點的位置）
+            map = L.map('map').setView([30, 50], 3);
+            
+            // 添加地圖圖層
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+            
+            // 添加所有地點標記
+            addAllMarkers();
+        }
+
+        // 添加所有標記到地圖
+        function addAllMarkers() {
+            // 清除現有標記
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            historicalLocations.forEach(location => {
+                // 創建自定義圖標
+                const icon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background-color: ${location.color}; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+                
+                // 創建標記
+                const marker = L.marker([location.lat, location.lng], { icon: icon })
+                    .addTo(map)
+                    .bindPopup(`<b>${location.chinese}</b><br>${location.english}<br><small>${location.categoryName}</small>`);
+                
+                // 點擊標記事件
+                marker.on('click', function() {
+                    showLocationInfo(location);
+                    highlightLocationItem(location.id);
+                    map.setView([location.lat, location.lng], 6);
+                });
+                
+                markers.push(marker);
+            });
+        }
+
+        // 顯示地點詳細資訊
+        function showLocationInfo(location) {
+            activeLocationId = location.id;
+            
+            infoTitle.textContent = `${location.chinese} (${location.english})`;
+            infoDescription.textContent = location.description;
+            infoCategory.textContent = location.categoryName;
+            infoEra.textContent = location.era;
+            
+            mapInfo.style.display = 'block';
+        }
+
+        // 高亮對應的列表項目
+        function highlightLocationItem(locationId) {
+            // 移除所有項目的active類
+            document.querySelectorAll('.word-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 為對應項目添加active類
+            const activeItem = document.querySelector(`.word-item[data-id="${locationId}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+                activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 渲染分類按鈕
+        function renderCategories() {
+            categoriesContainer.innerHTML = '';
+            
+            // 創建"全部"按鈕
+            const allButton = document.createElement('button');
+            allButton.className = `category-btn ${currentCategory === 'all' ? 'active' : ''}`;
+            allButton.textContent = '全部地點';
+            allButton.dataset.category = 'all';
+            
+            allButton.addEventListener('click', function() {
+                currentCategory = 'all';
+                renderLocationsList();
+                updateActiveCategoryButtons();
+            });
+            
+            categoriesContainer.appendChild(allButton);
+            
+            // 創建分類按鈕
+            const categories = [
+                { id: 'ancient-civilizations', name: '古代文明與帝國', count: historicalLocations.filter(loc => loc.category === 'ancient-civilizations').length },
+                { id: 'geography', name: '地理與地名', count: historicalLocations.filter(loc => loc.category === 'geography').length },
+                { id: 'historical-figures', name: '歷史人物與學者', count: historicalLocations.filter(loc => loc.category === 'historical-figures').length },
+                { id: 'religion-philosophy', name: '宗教相關地點', count: historicalLocations.filter(loc => loc.category === 'religion-philosophy').length },
+                { id: 'culture-arts', name: '其他重要地點', count: historicalLocations.filter(loc => loc.category === 'culture-arts').length }
+            ];
+            
+            categories.forEach(category => {
+                if (category.count > 0) {
+                    const button = document.createElement('button');
+                    button.className = `category-btn ${currentCategory === category.id ? 'active' : ''}`;
+                    button.textContent = `${category.name} (${category.count})`;
+                    button.dataset.category = category.id;
+                    
+                    button.addEventListener('click', function() {
+                        currentCategory = category.id;
+                        renderLocationsList();
+                        updateActiveCategoryButtons();
+                    });
+                    
+                    categoriesContainer.appendChild(button);
+                }
+            });
+        }
+
+        // 更新活動分類按鈕狀態
+        function updateActiveCategoryButtons() {
+            document.querySelectorAll('.category-btn').forEach(button => {
+                if (button.dataset.category === currentCategory) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        // 渲染地點列表
+        function renderLocationsList() {
+            wordsList.innerHTML = '';
+            
+            // 過濾地點
+            let filteredLocations = historicalLocations;
+            
+            // 按分類過濾
+            if (currentCategory !== 'all') {
+                filteredLocations = filteredLocations.filter(location => location.category === currentCategory);
+            }
+            
+            // 按搜尋關鍵字過濾
+            if (currentSearch) {
+                const searchLower = currentSearch.toLowerCase();
+                filteredLocations = filteredLocations.filter(location => 
+                    location.english.toLowerCase().includes(searchLower) || 
+                    location.chinese.toLowerCase().includes(searchLower) ||
+                    location.description.toLowerCase().includes(searchLower)
+                );
+            }
+            
+            // 顯示結果
+            if (filteredLocations.length === 0) {
+                wordsList.innerHTML = `
+                    <div class="empty-state">
+                        <p>未找到符合條件的地點</p>
+                        <p>請嘗試其他搜尋詞或分類</p>
+                    </div>
+                `;
+            } else {
+                filteredLocations.forEach(location => {
+                    const locationElement = document.createElement('div');
+                    locationElement.className = `word-item ${activeLocationId === location.id ? 'active' : ''}`;
+                    locationElement.dataset.id = location.id;
+                    
+                    locationElement.innerHTML = `
+                        <div class="word-english">${location.english}</div>
+                        <div class="word-chinese">${location.chinese}</div>
+                        <div class="word-category">${location.categoryName}</div>
+                    `;
+                    
+                    locationElement.addEventListener('click', function() {
+                        showLocationInfo(location);
+                        highlightLocationItem(location.id);
+                        
+                        // 移動地圖視圖到該地點
+                        map.setView([location.lat, location.lng], 6);
+                        
+                        // 打開對應標記的彈出視窗
+                        markers.forEach(marker => {
+                            const markerLatLng = marker.getLatLng();
+                            if (markerLatLng.lat === location.lat && markerLatLng.lng === location.lng) {
+                                marker.openPopup();
+                            }
+                        });
+                    });
+                    
+                    wordsList.appendChild(locationElement);
+                });
+            }
+            
+            updateWordCount(filteredLocations.length);
+        }
+
+        // 搜尋地點
+        function searchLocations() {
+            currentSearch = searchInput.value.trim();
+            renderLocationsList();
+        }
+
+        // 更新地點計數
+        function updateWordCount(count = null) {
+            if (count !== null) {
+                wordCountElement.textContent = count;
+                return;
+            }
+            
+            wordCountElement.textContent = historicalLocations.length;
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 搜尋事件
+            searchInput.addEventListener('input', searchLocations);
+            
+            // 按鈕事件
+            document.getElementById('reset-view').addEventListener('click', function() {
+                map.setView([30, 50], 3);
+                mapInfo.style.display = 'none';
+                
+                // 清除列表中的active項目
+                document.querySelectorAll('.word-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                activeLocationId = null;
+            });
+            
+            document.getElementById('show-all').addEventListener('click', function() {
+                currentCategory = 'all';
+                currentSearch = '';
+                searchInput.value = '';
+                renderCategories();
+                renderLocationsList();
+                
+                // 將地圖視圖調整到適合所有標記的範圍
+                const bounds = L.latLngBounds(
+                    historicalLocations.map(loc => [loc.lat, loc.lng])
+                );
+                map.fitBounds(bounds, { padding: [50, 50] });
+            });
+            
+            // 關閉資訊視窗
+            document.getElementById('close-info').addEventListener('click', function() {
+                mapInfo.style.display = 'none';
+                
+                // 清除列表中的active項目
+                document.querySelectorAll('.word-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                activeLocationId = null;
+            });
+        }
+    </script>
+</body>
+</html>
