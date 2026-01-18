@@ -1,263 +1,1027 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
-<meta charset="UTF-8" />
-<title>Renaissance Quiz – Instant Feedback (16 Questions)</title>
-<style>
-  body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 980px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #f9f8f5;
-    color: #2c2c2c;
-    line-height: 1.6;
-  }
-  h1 {
-    color: #8b0000;
-    text-align: center;
-    border-bottom: 3px solid #d4a373;
-    padding-bottom: 15px;
-  }
-  .question {
-    background: white;
-    padding: 22px;
-    margin: 24px 0;
-    border-radius: 10px;
-    border-left: 6px solid #8b0000;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-  }
-  .options label {
-    display: block;
-    margin: 14px 0;
-    padding: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .options label:hover {
-    background: #f0f0f8;
-  }
-  .feedback {
-    margin-top: 14px;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    display: none;
-  }
-  .correct { background: #e6ffe6; color: #006400; }
-  .wrong   { background: #ffe6e6; color: #8b0000; }
-  button {
-    background: #8b0000;
-    color: white;
-    padding: 14px 32px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    margin: 40px auto;
-    display: block;
-  }
-  button:hover { background: #6b0000; }
-  #finalResult {
-    text-align: center;
-    font-size: 1.4rem;
-    margin: 30px 0;
-    padding: 20px;
-    border-radius: 10px;
-    display: none;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英文字彙互動溫習系統</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3a1;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        button.active {
+            background-color: var(--accent-color);
+        }
+        
+        .search-box {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 300px;
+            max-width: 100%;
+        }
+        
+        .stats {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .category-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-title {
+            font-size: 1.4rem;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-count {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .words-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .word-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 0;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .word-card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+        
+        .card-front {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .card-back {
+            background-color: var(--accent-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .english {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .chinese {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .category-tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .instructions {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        .quiz-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .quiz-question {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .quiz-option {
+            padding: 15px;
+            background-color: #f1f3f5;
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .quiz-option:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary-color);
+        }
+        
+        .quiz-option.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .quiz-option.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .quiz-result {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        
+        .quiz-score {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .words-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>英文字彙互動溫習系統</h1>
+            <p class="subtitle">歷史與學術詞彙總整理 • 點擊卡片翻轉查看中英文對照</p>
+        </header>
+        
+        <div class="controls">
+            <div class="control-group">
+                <button id="show-all" class="active">全部字彙 (128)</button>
+                <button id="show-quiz">隨機測驗</button>
+                <button id="reset-cards">重設所有卡片</button>
+            </div>
+            
+            <div class="control-group">
+                <input type="text" id="search-input" class="search-box" placeholder="搜尋英文或中文詞彙...">
+                <button id="search-btn">搜尋</button>
+                <button id="clear-search">清除搜尋</button>
+            </div>
+        </div>
+        
+        <div class="stats">
+            已載入 <span id="word-count">128</span> 個字彙 • 點擊下方分類或直接瀏覽所有單詞
+        </div>
+        
+        <div class="categories-grid" id="categories-container">
+            <!-- 分類卡片會由JavaScript動態生成 -->
+        </div>
+        
+        <div class="words-container" id="words-container">
+            <!-- 單詞卡片會由JavaScript動態生成 -->
+        </div>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="progress-bar">
+                <div class="progress" id="quiz-progress"></div>
+            </div>
+            <div class="quiz-question" id="quiz-question"></div>
+            <div class="quiz-options" id="quiz-options"></div>
+            <div class="quiz-result" id="quiz-result"></div>
+            <div class="action-buttons">
+                <button id="next-question">下一題</button>
+                <button id="end-quiz">結束測驗</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>本系統包含您所詢問過的歷史與學術英文字彙</p>
+            <p>設計用於互動式溫習與測驗 • 最後更新: 2026年1月</p>
+        </footer>
+    </div>
 
-<h1>Renaissance Quiz – Instant Feedback (16 Questions)</h1>
-<p style="text-align:center; color:#555; font-style:italic; margin-bottom:2em;">
-  Select an answer → get immediate feedback!<br>
-  (Based on textbook pages covering the Renaissance causes, features, people & developments)
-</p>
+    <script>
+        // 字彙資料庫 - 已整合新詞彙並修正解釋
+        const vocabulary = {
+            // 1. 古代文明、帝國與歷史事件
+            "ancient-civilizations": {
+                name: "古代文明、帝國與歷史事件",
+                words: [
+                    { english: "Mesopotamia", chinese: "美索不達米亞（兩河流域）" },
+                    { english: "Sumer", chinese: "蘇美" },
+                    { english: "Babylon", chinese: "巴比倫" },
+                    { english: "Assyria", chinese: "亞述" },
+                    { english: "Akkadian", chinese: "阿卡德語/阿卡德人的" },
+                    { english: "Elamite", chinese: "埃蘭語/埃蘭人的" },
+                    { english: "Cyrus the Great", chinese: "居魯士大帝" },
+                    { english: "Achaemenid", chinese: "阿契美尼德（波斯帝國）" },
+                    { english: "Parthia", chinese: "安息（帕提亞帝國）" },
+                    { english: "Arsace", chinese: "阿薩息斯（安息開國君主）" },
+                    { english: "Sasanians", chinese: "薩珊王朝" },
+                    { english: "Da Qin", chinese: "大秦（古中國對羅馬的稱呼）" },
+                    { english: "Xiongnu", chinese: "匈奴" },
+                    { english: "Yuezhi", chinese: "月氏" },
+                    { english: "Kushan", chinese: "貴霜（帝國）" },
+                    { english: "Scythian", chinese: "斯基泰人" },
+                    { english: "Abbasid", chinese: "阿拔斯王朝（伊斯蘭黃金時代）" },
+                    { english: "Himyar", chinese: "希木葉爾（古代葉門的猶太王國）" },
+                    { english: "Trojan War", chinese: "特洛伊戰爭（希臘神話與歷史衝突）" },
+                    { english: "Saracens", chinese: "薩拉森人（中世紀歐洲對穆斯林的統稱）" }
+                ]
+            },
+            
+            // 2. 地理與地名
+            "geography": {
+                name: "地理與地名",
+                words: [
+                    { english: "Tigris", chinese: "底格里斯河" },
+                    { english: "Euphrates", chinese: "幼發拉底河" },
+                    { english: "Oxus", chinese: "阿姆河（古稱）" },
+                    { english: "Jaxartes", chinese: "錫爾河（古稱）" },
+                    { english: "Laxartes", chinese: "(同 Jaxartes, 拼寫變體)" },
+                    { english: "Bactria", chinese: "大夏（巴克特里亞）" },
+                    { english: "Caspian Sea", chinese: "裡海" },
+                    { english: "Khuzistan", chinese: "胡齊斯坦（伊朗省份）" },
+                    { english: "Dunhuang", chinese: "敦煌" },
+                    { english: "Xuanquan", chinese: "懸泉置" },
+                    { english: "Basra", chinese: "巴斯拉" },
+                    { english: "Aqaba", chinese: "阿卡巴" },
+                    { english: "Ctesiphon", chinese: "泰西封（古波斯首都）" },
+                    { english: "Pannonia", chinese: "潘諾尼亞" },
+                    { english: "Hijaz", chinese: "漢志（沙烏地西部區域，含麥加與麥地那）" },
+                    { english: "Yathrib", chinese: "雅里布（麥地那的古稱）" },
+                    { english: "Balkh", chinese: "巴爾赫（阿富汗『城市之母』，祆教與佛教中心）" },
+                    { english: "Sindh", chinese: "信德省（巴基斯坦省份）" },
+                    { english: "Steppe", chinese: "草原（廣闊乾草原地帶）" },
+                    { english: "Oases", chinese: "綠洲（沙漠水源地）" }
+                ]
+            },
+            
+            // 3. 歷史人物與學者
+            "historical-figures": {
+                name: "歷史人物與學者",
+                words: [
+                    { english: "Sima Qian", chinese: "司馬遷" },
+                    { english: "Taishi", chinese: "太師/太史" },
+                    { english: "Sophocles", chinese: "索福克里斯" },
+                    { english: "Euripides", chinese: "歐里庇得斯" },
+                    { english: "Pontius Pilate", chinese: "本丟·彼拉多" },
+                    { english: "Uthman", chinese: "奧斯曼（伊斯蘭教第三任哈里發）" },
+                    { english: "Mazdak", chinese: "瑪茲達克（薩珊波斯宗教改革者）" }
+                ]
+            },
+            
+            // 4. 宗教、哲學與社會術語
+            "religion-philosophy": {
+                name: "宗教、哲學與社會術語",
+                words: [
+                    { english: "Gnosticism", chinese: "諾斯底主義（強調內在祕傳知識的二元論思想）" },
+                    { english: "Manichaeism", chinese: "摩尼教（波斯二元論宗教，明教）" },
+                    { english: "Passover", chinese: "逾越節（猶太教紀念出埃及的節日）" },
+                    { english: "Umma", chinese: "烏瑪（全球穆斯林信仰共同體）" },
+                    { english: "Hadith", chinese: "聖訓（記錄先知穆罕默德言行的典籍）" },
+                    { english: "Ascetic/Asceticism", chinese: "苦行/禁慾主義（透過自我克制追求靈性）" },
+                    { english: "Proselyte", chinese: "歸信者（改宗者）" },
+                    { english: "Proselytizing", chinese: "傳教（勸人改宗的活動）" },
+                    { english: "Council of Chalcedon", chinese: "加爾西頓公會議（公元451年，確立基督『神人二性』）" },
+                    { english: "Hijra", chinese: "遷徙（特指先知穆罕默德從麥加遷往麥地那）" },
+                    { english: "Haram", chinese: "聖地（伊斯蘭教中神聖不可侵犯之地）" }
+                ]
+            },
+            
+            // 5. 文化、藝術與文學
+            "culture-arts": {
+                name: "文化、藝術與文學",
+                words: [
+                    { english: "Gandhara", chinese: "犍陀羅（藝術）" },
+                    { english: "Aeneid", chinese: "《埃涅阿斯紀》" },
+                    { english: "Dionysus", chinese: "戴歐尼修斯（酒神）" },
+                    { english: "Aria", chinese: "詠嘆調" },
+                    { english: "Behistun", chinese: "貝希斯敦（銘文）" },
+                    { english: "Inscription", chinese: "銘文" },
+                    { english: "Folio", chinese: "對開本/頁碼" },
+                    { english: "Rhapsodic", chinese: "狂想曲式的/狂喜的" },
+                    { english: "Vibrancy", chinese: "活力" }
+                ]
+            },
+            
+            // 6. 物品、材料與顏色
+            "materials-colors": {
+                name: "物品、材料與顏色",
+                words: [
+                    { english: "Amphorae", chinese: "雙耳瓶" },
+                    { english: "Hanxue Ma", chinese: "汗血馬" },
+                    { english: "Frankincense", chinese: "乳香" },
+                    { english: "Myrrh", chinese: "沒藥" },
+                    { english: "Lapis", chinese: "青金石" },
+                    { english: "Cinnabar", chinese: "辰砂/朱砂" },
+                    { english: "Vermilion", chinese: "朱砂紅" },
+                    { english: "Turquoise", chinese: "綠松石" },
+                    { english: "Topaz", chinese: "托帕石" },
+                    { english: "Ebony", chinese: "烏木" },
+                    { english: "Cedar", chinese: "雪松" },
+                    { english: "Porphyry", chinese: "斑岩（紫噴岩）" },
+                    { english: "Diadem", chinese: "王冠" },
+                    { english: "Ringlet", chinese: "螺旋狀捲髮" },
+                    { english: "Coinage", chinese: "貨幣鑄造/新詞創造" },
+                    { english: "Mints", chinese: "造幣廠/薄荷糖/鑄造" },
+                    { english: "Scribe", chinese: "抄寫員" },
+                    { english: "Agate", chinese: "瑪瑙" }
+                ]
+            },
+            
+            // 7. 核心與抽象詞彙
+            "core-vocabulary": {
+                name: "核心與抽象詞彙",
+                words: [
+                    { english: "Backwater", chinese: "回水處/閉塞之地" },
+                    { english: "Cauldron", chinese: "大鍋/熔爐" },
+                    { english: "Alluvial", chinese: "沖積的" },
+                    { english: "Hewn", chinese: "砍伐/鑿出的" },
+                    { english: "Cliff", chinese: "懸崖" },
+                    { english: "Quench", chinese: "解渴/淬火" },
+                    { english: "Subjugate", chinese: "征服" },
+                    { english: "Dislodging", chinese: "逐出/移開" },
+                    { english: "Emollient", chinese: "潤膚劑/舒緩的" },
+                    { english: "Engraver", chinese: "雕刻師" },
+                    { english: "Progenitor", chinese: "祖先/創始人" },
+                    { english: "Exertion", chinese: "努力/費力" },
+                    { english: "Exquisite", chinese: "精緻的" },
+                    { english: "Miniature", chinese: "微型的" },
+                    { english: "Caucasian", chinese: "高加索人/白種人" },
+                    { english: "Psychoanalysts", chinese: "精神分析師" },
+                    { english: "Truism", chinese: "自明之理/老生常談" },
+                    { english: "Stallion", chinese: "種馬" },
+                    { english: "Stallin", chinese: "(可能指 Stalin 史達林, 或 Stalling 拖延)" },
+                    { english: "Guild", chinese: "公會" },
+                    { english: "Emporia", chinese: "商業中心 (複數)" },
+                    { english: "Vulgarity", chinese: "粗俗" },
+                    { english: "Nouveaux", chinese: "新的 (複數，如 Nouveaux Riches 暴發戶)" },
+                    { english: "Consternation", chinese: "驚愕" },
+                    { english: "Cipher", chinese: "密碼/謎一樣的人" },
+                    { english: "Majestic", chinese: "雄偉的" },
+                    { english: "Ornate", chinese: "華麗的" },
+                    { english: "Scathing", chinese: "尖刻的" },
+                    { english: "Vociferous", chinese: "喧嚷的" },
+                    { english: "Venomous", chinese: "有毒的/惡毒的" },
+                    { english: "Perspicuous", chinese: "清晰易懂的" },
+                    { english: "Conformist", chinese: "從眾的" },
+                    { english: "Lampoon", chinese: "諷刺" },
+                    { english: "Plethora", chinese: "過剩" },
+                    { english: "Gusto", chinese: "熱情" },
+                    { english: "Crucible", chinese: "坩堝/嚴峻考驗" },
+                    { english: "Repercussions", chinese: "後果" },
+                    { english: "Abdicating", chinese: "退位" },
+                    { english: "Soliciting", chinese: "徵求/拉客" },
+                    { english: "Repudiate", chinese: "拒絕承認" },
+                    { english: "Scabs", chinese: "結痂/工賊" },
+                    { english: "Mule", chinese: "騾子/穆勒鞋/錢騾" },
+                    { english: "Beholder", chinese: "觀察者/眼魔" },
+                    { english: "Rearguard", chinese: "後衛/守舊派" }
+                ]
+            },
+            
+            // 8. 語言與文字
+            "language": {
+                name: "語言與文字",
+                words: [
+                    { english: "Altaic", chinese: "阿爾泰語系的" },
+                    { english: "Cuneiform", chinese: "楔形文字" },
+                    { english: "Palaeography", chinese: "古文字學（研究古代手寫體的學問）" }
+                ]
+            },
+            
+            // 9. 科學、技術與流行文化
+            "science-tech-pop": {
+                name: "科學、技術與流行文化",
+                words: [
+                    { english: "Ado", chinese: "日本覆面系歌手" },
+                    { english: "Halo", chinese: "光暈（遊戲系列/物理現象/賽車安全裝置）" },
+                    { english: "Rumbling", chinese: "地鳴/隆隆聲（自然現象或《進擊的巨人》中的毀滅行動）" },
+                    { english: "Caravans", chinese: "旅行拖車（各類露營拖車）" }
+                ]
+            }
+        };
 
-<div id="quiz"></div>
+        // 應用狀態
+        let currentView = 'all'; // 'all', 'category', 'quiz', 'search'
+        let currentCategory = null;
+        let currentSearch = '';
+        let flippedCards = new Set();
+        let quizState = {
+            active: false,
+            currentQuestion: 0,
+            score: 0,
+            questions: [],
+            totalQuestions: 10
+        };
 
-<button onclick="showFinalScore()">Finish Quiz & See Total Score</button>
-<div id="finalResult"></div>
+        // DOM元素
+        const categoriesContainer = document.getElementById('categories-container');
+        const wordsContainer = document.getElementById('words-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const searchInput = document.getElementById('search-input');
+        const wordCountElement = document.getElementById('word-count');
 
-<script>
-const questions = [
-  {
-    q: "1. Where did the Renaissance first begin?",
-    options: ["a. France", "b. England", "c. Italian Peninsula (esp. Florence)", "d. Germany"],
-    correct: 2,
-    answerText: "Italian Peninsula (especially Florence)"
-  },
-  {
-    q: "2. The word 'Renaissance' means:",
-    options: ["a. New birth / revival", "b. Enlightenment", "c. Religious reform", "d. Industrial revolution"],
-    correct: 0,
-    answerText: "New birth / revival (of classical Greco-Roman learning)"
-  },
-  {
-    q: "3. Which family played the most important role in supporting artists and the development of the Renaissance in Florence?",
-    options: ["a. Borgia", "b. Sforza", "c. Medici", "d. Visconti"],
-    correct: 2,
-    answerText: "Medici (especially Cosimo and Lorenzo de' Medici)"
-  },
-  {
-    q: "4. Which events helped bring ancient Greek and Roman knowledge back to Europe?",
-    options: ["a. The Crusades only", "b. Fall of Constantinople (1453) only", "c. Both the Crusades and Fall of Constantinople", "d. The Black Death"],
-    correct: 2,
-    answerText: "Both the Crusades and Fall of Constantinople"
-  },
-  {
-    q: "5. Who is regarded as the 'Father of Humanism'?",
-    options: ["a. Giovanni Boccaccio", "b. Francesco Petrarch", "c. Dante Alighieri", "d. William Shakespeare"],
-    correct: 1,
-    answerText: "Francesco Petrarch"
-  },
-  {
-    q: "6. Which of the following is NOT a major literary development of the Renaissance?",
-    options: ["a. Rise of novels (Boccaccio's Decameron)", "b. Famous English plays (Shakespeare)", "c. Epic poems written mostly in Latin (Dante)", "d. Use of native languages instead of only Latin"],
-    correct: 2,
-    answerText: "Dante wrote The Divine Comedy in Italian vernacular (not mostly Latin)"
-  },
-  {
-    q: "7. Which city was NOT a major wealthy Italian trading centre during the early Renaissance?",
-    options: ["a. Florence", "b. Venice", "c. Genoa", "d. Paris"],
-    correct: 3,
-    answerText: "Paris (the key centres were Italian city-states)"
-  },
-  {
-    q: "8. Humanism during the Renaissance mainly focused on:",
-    options: ["a. Strict obedience to Church teachings", "b. Human potential, reason, and classical learning", "c. Only religious subjects", "d. Military conquest"],
-    correct: 1,
-    answerText: "Human potential, reason, and classical learning"
-  },
-  {
-    q: "9. Which plague affected Florence and is described in Boccaccio's Decameron?",
-    options: ["a. Smallpox", "b. The Black Death", "c. Cholera", "d. Typhus"],
-    correct: 1,
-    answerText: "The Black Death"
-  },
-  {
-    q: "10. Who wrote 'The Divine Comedy' describing Heaven, Hell and Purgatory?",
-    options: ["a. Petrarch", "b. Boccaccio", "c. Dante Alighieri", "d. Shakespeare"],
-    correct: 2,
-    answerText: "Dante Alighieri"
-  },
-  {
-    q: "11. The rise of wealthy merchants and bankers in Italian city-states mainly contributed to the Renaissance by:",
-    options: ["a. Starting wars with the Church", "b. Supporting artists, scholars and new buildings", "c. Banning ancient Greek books", "d. Moving the capital to Rome"],
-    correct: 1,
-    answerText: "Supporting artists, scholars and new buildings (patronage)"
-  },
-  {
-    q: "12. During the late Middle Ages, the Church's influence weakened because of:",
-    options: ["a. The failure of the Crusades", "b. Corruption and the refusal of some rulers to pay taxes to the Pope", "c. Both A and B", "d. The rise of universities only"],
-    correct: 2,
-    answerText: "Both A and B"
-  },
-  {
-    q: "13. Which of these is a famous work by William Shakespeare?",
-    options: ["a. The Decameron", "b. Romeo and Juliet", "c. The Divine Comedy", "d. Canzoniere"],
-    correct: 1,
-    answerText: "Romeo and Juliet"
-  },
-  {
-    q: "14. The Crusades encouraged the exchange of knowledge mainly between:",
-    options: ["a. Europe and the Arab world", "b. Europe and China", "c. Europe and the Americas", "d. Only between European countries"],
-    correct: 0,
-    answerText: "Europe and the Arab world"
-  },
-  {
-    q: "15. From the 12th century onwards, the rise of universities in Europe helped the Renaissance by:",
-    options: ["a. Teaching only religious subjects", "b. Allowing students to study medicine, law, philosophy and ancient texts", "c. Closing down trade routes", "d. Banning humanism"],
-    correct: 1,
-    answerText: "Allowing students to study medicine, law, philosophy and ancient texts"
-  },
-  {
-    q: "16. Which statement best describes the main change in thinking during the Renaissance?",
-    options: ["a. From God-centred to human-centred thinking", "b. From science to superstition", "c. From trade to farming", "d. From cities to rural life"],
-    correct: 0,
-    answerText: "From God-centred to human-centred thinking"
-  }
-];
+        // 初始化應用
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCategories();
+            renderAllWords();
+            setupEventListeners();
+            updateWordCount();
+        });
 
-let score = 0;
-let answeredCount = 0;
+        // 渲染分類卡片
+        function renderCategories() {
+            categoriesContainer.innerHTML = '';
+            
+            for (const categoryId in vocabulary) {
+                const category = vocabulary[categoryId];
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category-card';
+                categoryElement.dataset.category = categoryId;
+                
+                categoryElement.innerHTML = `
+                    <div class="category-title">
+                        <span>${category.name}</span>
+                        <span class="category-count">${category.words.length}</span>
+                    </div>
+                    <p>包含 ${category.words.length} 個相關字彙</p>
+                    <p class="instructions">點擊查看此分類所有單詞</p>
+                `;
+                
+                categoryElement.addEventListener('click', function() {
+                    showCategory(categoryId);
+                });
+                
+                categoriesContainer.appendChild(categoryElement);
+            }
+        }
 
-function renderQuiz() {
-  const container = document.getElementById("quiz");
-  questions.forEach((q, index) => {
-    const div = document.createElement("div");
-    div.className = "question";
-    div.innerHTML = <h3>${q.q}</h3>;
-    
-    const opts = document.createElement("div");
-    opts.className = "options";
-    
-    q.options.forEach((opt, i) => {
-      const label = document.createElement("label");
-      label.innerHTML = <input type="radio" name="q\( {index}" value=" \){i}" onclick="checkAnswer(${index}, ${i})"> ${opt};
-      opts.appendChild(label);
-    });
-    
-    div.appendChild(opts);
-    
-    const feedback = document.createElement("div");
-    feedback.id = feedback${index};
-    feedback.className = "feedback";
-    div.appendChild(feedback);
-    
-    container.appendChild(div);
-  });
-}
+        // 渲染所有單詞
+        function renderAllWords() {
+            wordsContainer.innerHTML = '';
+            currentView = 'all';
+            currentCategory = null;
+            
+            let allWords = [];
+            for (const categoryId in vocabulary) {
+                const category = vocabulary[categoryId];
+                category.words.forEach(word => {
+                    word.category = category.name;
+                    word.categoryId = categoryId;
+                    allWords.push(word);
+                });
+            }
+            
+            // 隨機排序單詞
+            allWords = shuffleArray(allWords);
+            
+            renderWords(allWords);
+            updateActiveButton('show-all');
+        }
 
-function checkAnswer(qIndex, selected) {
-  const q = questions[qIndex];
-  const fb = document.getElementById(feedback${qIndex});
-  fb.style.display = "block";
+        // 渲染特定分類的單詞
+        function showCategory(categoryId) {
+            wordsContainer.innerHTML = '';
+            currentView = 'category';
+            currentCategory = categoryId;
+            
+            const category = vocabulary[categoryId];
+            const words = category.words.map(word => {
+                return {
+                    ...word,
+                    category: category.name,
+                    categoryId: categoryId
+                };
+            });
+            
+            renderWords(words);
+            updateActiveButton(categoryId);
+        }
 
-  if (selected === q.correct) {
-    fb.textContent = "Correct! ✓";
-    fb.className = "feedback correct";
-    score++;
-  } else {
-    fb.textContent = Wrong! The correct answer is: ${q.options[q.correct]} → ${q.answerText};
-    fb.className = "feedback wrong";
-  }
+        // 渲染單詞卡片
+        function renderWords(words) {
+            wordsContainer.innerHTML = '';
+            
+            if (words.length === 0) {
+                wordsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <p>未找到符合條件的字彙</p>
+                        <p>請嘗試其他搜尋詞或分類</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            words.forEach((word, index) => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'word-card';
+                wordElement.dataset.index = index;
+                
+                // 檢查此卡片是否已被翻轉
+                const isFlipped = flippedCards.has(`${word.english}-${word.chinese}`);
+                
+                wordElement.innerHTML = `
+                    <div class="card-inner ${isFlipped ? 'flipped' : ''}">
+                        <div class="card-front">
+                            <div class="english">${word.english}</div>
+                            <div class="category-tag">${word.category}</div>
+                            <p class="instructions">點擊翻轉查看中文</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="chinese">${word.chinese}</div>
+                            <div class="english" style="font-size: 1.2rem; opacity: 0.9;">${word.english}</div>
+                            <div class="category-tag">${word.category}</div>
+                            <p class="instructions">點擊翻轉回英文</p>
+                        </div>
+                    </div>
+                `;
+                
+                wordElement.addEventListener('click', function() {
+                    this.classList.toggle('flipped');
+                    const cardKey = `${word.english}-${word.chinese}`;
+                    if (this.classList.contains('flipped')) {
+                        flippedCards.add(cardKey);
+                    } else {
+                        flippedCards.delete(cardKey);
+                    }
+                });
+                
+                wordsContainer.appendChild(wordElement);
+            });
+        }
 
-  // Disable options after selection
-  const radios = document.querySelectorAll(input[name="q${qIndex}"]);
-  radios.forEach(r => r.disabled = true);
+        // 更新活動按鈕狀態
+        function updateActiveButton(buttonId) {
+            // 清除所有按鈕的active類
+            document.querySelectorAll('.controls button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 為當前活動按鈕添加active類
+            const activeButton = document.getElementById(buttonId);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
 
-  answeredCount++;
-}
+        // 搜尋單詞
+        function searchWords() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            currentSearch = searchTerm;
+            currentView = 'search';
+            
+            if (!searchTerm) {
+                renderAllWords();
+                return;
+            }
+            
+            let results = [];
+            for (const categoryId in vocabulary) {
+                const category = vocabulary[categoryId];
+                category.words.forEach(word => {
+                    if (word.english.toLowerCase().includes(searchTerm) || 
+                        word.chinese.toLowerCase().includes(searchTerm)) {
+                        word.category = category.name;
+                        word.categoryId = categoryId;
+                        results.push(word);
+                    }
+                });
+            }
+            
+            renderWords(results);
+            updateActiveButton('search-btn');
+            updateWordCount(results.length);
+        }
 
-function showFinalScore() {
-  const total = questions.length;
-  const percent = Math.round((score / total) * 100);
-  let msg = `You scored \( {score}/ \){total} (${percent}%)! `;
+        // 更新單詞計數
+        function updateWordCount(count = null) {
+            if (count !== null) {
+                wordCountElement.textContent = count;
+                return;
+            }
+            
+            let totalWords = 0;
+            for (const categoryId in vocabulary) {
+                totalWords += vocabulary[categoryId].words.length;
+            }
+            wordCountElement.textContent = totalWords;
+        }
 
-  if (percent >= 85) {
-    msg += "Outstanding! 🎉 You're a Renaissance master!";
-  } else if (percent >= 65) {
-    msg += "Great job! 👍 Solid understanding!";
-  } else if (percent >= 40) {
-    msg += "Good effort! 📚 Review a bit more and you'll do even better!";
-  } else {
-    msg += "Nice try! 💪 Keep studying the key causes, people and developments.";
-  }
+        // 隨機測驗
+        function startQuiz() {
+            // 收集所有單詞
+            let allWords = [];
+            for (const categoryId in vocabulary) {
+                const category = vocabulary[categoryId];
+                category.words.forEach(word => {
+                    word.category = category.name;
+                    allWords.push(word);
+                });
+            }
+            
+            // 隨機選擇測驗題目
+            allWords = shuffleArray(allWords);
+            quizState.questions = allWords.slice(0, Math.min(quizState.totalQuestions, allWords.length));
+            quizState.currentQuestion = 0;
+            quizState.score = 0;
+            quizState.active = true;
+            
+            // 顯示測驗界面
+            wordsContainer.style.display = 'none';
+            categoriesContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            currentView = 'quiz';
+            
+            updateActiveButton('show-quiz');
+            showNextQuizQuestion();
+        }
 
-  document.getElementById("finalResult").textContent = msg;
-  document.getElementById("finalResult").style.display = "block";
-  document.getElementById("finalResult").style.background = percent >= 65 ? "#e6ffe6" : "#fff3e6";
-  document.getElementById("finalResult").style.color = percent >= 65 ? "#006400" : "#8b4513";
+        // 顯示下一個測驗問題
+        function showNextQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const resultElement = document.getElementById('quiz-result');
+            const progressElement = document.getElementById('quiz-progress');
+            
+            // 清除上一個問題的結果
+            resultElement.innerHTML = '';
+            optionsElement.innerHTML = '';
+            
+            if (quizState.currentQuestion >= quizState.questions.length) {
+                // 測驗結束
+                showQuizResults();
+                return;
+            }
+            
+            // 更新進度條
+            const progressPercent = (quizState.currentQuestion / quizState.questions.length) * 100;
+            progressElement.style.width = `${progressPercent}%`;
+            
+            // 獲取當前問題
+            const currentQuestion = quizState.questions[quizState.currentQuestion];
+            questionElement.textContent = `「${currentQuestion.english}」的中文意思是？`;
+            
+            // 生成選項（包含正確答案和隨機錯誤答案）
+            const options = generateQuizOptions(currentQuestion);
+            
+            // 渲染選項
+            options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option.chinese;
+                optionElement.dataset.correct = option.correct;
+                
+                optionElement.addEventListener('click', function() {
+                    if (this.dataset.correct === 'true') {
+                        this.classList.add('correct');
+                        quizState.score++;
+                        resultElement.innerHTML = '<span style="color: #28a745;">✓ 正確！</span>';
+                    } else {
+                        this.classList.add('incorrect');
+                        resultElement.innerHTML = `<span style="color: #dc3545;">✗ 錯誤！正確答案是：${currentQuestion.chinese}</span>`;
+                        
+                        // 高亮正確答案
+                        document.querySelectorAll('.quiz-option').forEach(opt => {
+                            if (opt.dataset.correct === 'true') {
+                                opt.classList.add('correct');
+                            }
+                        });
+                    }
+                    
+                    // 禁用所有選項
+                    document.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                    });
+                    
+                    // 顯示下一題按鈕
+                    document.getElementById('next-question').style.display = 'block';
+                });
+                
+                optionsElement.appendChild(optionElement);
+            });
+            
+            // 隱藏下一題按鈕直到回答問題
+            document.getElementById('next-question').style.display = 'none';
+        }
 
-  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-}
+        // 生成測驗選項
+        function generateQuizOptions(correctWord) {
+            const options = [{ chinese: correctWord.chinese, correct: true }];
+            
+            // 收集其他單詞作為錯誤選項
+            let allWords = [];
+            for (const categoryId in vocabulary) {
+                const category = vocabulary[categoryId];
+                category.words.forEach(word => {
+                    if (word.english !== correctWord.english) {
+                        allWords.push(word.chinese);
+                    }
+                });
+            }
+            
+            // 隨機選擇3個錯誤選項
+            allWords = shuffleArray(allWords);
+            for (let i = 0; i < 3 && i < allWords.length; i++) {
+                options.push({ chinese: allWords[i], correct: false });
+            }
+            
+            // 隨機排序選項
+            return shuffleArray(options);
+        }
 
-window.onload = renderQuiz;
-</script>
+        // 顯示測驗結果
+        function showQuizResults() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const resultElement = document.getElementById('quiz-result');
+            const progressElement = document.getElementById('quiz-progress');
+            
+            questionElement.textContent = '測驗完成！';
+            optionsElement.innerHTML = '';
+            progressElement.style.width = '100%';
+            
+            const scorePercent = Math.round((quizState.score / quizState.questions.length) * 100);
+            resultElement.innerHTML = `
+                <p>您回答了 ${quizState.questions.length} 題</p>
+                <p>答對了 <span class="quiz-score">${quizState.score}</span> 題</p>
+                <p>正確率: <span class="quiz-score">${scorePercent}%</span></p>
+                <p>${getQuizFeedback(scorePercent)}</p>
+            `;
+            
+            document.getElementById('next-question').style.display = 'none';
+        }
 
+        // 獲取測驗反饋
+        function getQuizFeedback(scorePercent) {
+            if (scorePercent >= 90) return '太棒了！您對這些字彙掌握得非常好！';
+            if (scorePercent >= 70) return '表現不錯！繼續保持練習。';
+            if (scorePercent >= 50) return '還可以，建議多複習不熟悉的單詞。';
+            return '需要多加練習，建議從分類開始逐步學習。';
+        }
+
+        // 結束測驗
+        function endQuiz() {
+            quizState.active = false;
+            wordsContainer.style.display = 'grid';
+            categoriesContainer.style.display = 'grid';
+            quizContainer.style.display = 'none';
+            renderAllWords();
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            // 按鈕事件
+            document.getElementById('show-all').addEventListener('click', renderAllWords);
+            document.getElementById('show-quiz').addEventListener('click', startQuiz);
+            document.getElementById('reset-cards').addEventListener('click', function() {
+                flippedCards.clear();
+                if (currentView === 'all') {
+                    renderAllWords();
+                } else if (currentView === 'category' && currentCategory) {
+                    showCategory(currentCategory);
+                } else if (currentView === 'search' && currentSearch) {
+                    searchWords();
+                }
+            });
+            
+            // 搜尋事件
+            document.getElementById('search-btn').addEventListener('click', searchWords);
+            document.getElementById('clear-search').addEventListener('click', function() {
+                searchInput.value = '';
+                renderAllWords();
+            });
+            
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    searchWords();
+                }
+            });
+            
+            // 測驗事件
+            document.getElementById('next-question').addEventListener('click', function() {
+                quizState.currentQuestion++;
+                showNextQuizQuestion();
+            });
+            
+            document.getElementById('end-quiz').addEventListener('click', endQuiz);
+        }
+
+        // 工具函數：隨機排序陣列
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+    </script>
 </body>
 </html>
