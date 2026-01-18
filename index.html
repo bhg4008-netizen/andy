@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Renaissance & Scientific Revolution Quiz – Instant Feedback</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 980px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f9f8f5;
+    color: #2c2c2c;
+    line-height: 1.6;
+  }
+  h1 {
+    color: #8b0000;
+    text-align: center;
+    border-bottom: 3px solid #d4a373;
+    padding-bottom: 15px;
+  }
+  .question {
+    background: white;
+    padding: 22px;
+    margin: 24px 0;
+    border-radius: 10px;
+    border-left: 6px solid #8b0000;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  }
+  .options label {
+    display: block;
+    margin: 14px 0;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .options label:hover {
+    background: #f0f0f8;
+  }
+  .feedback {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    display: none;
+  }
+  .correct { background: #e6ffe6; color: #006400; }
+  .wrong   { background: #ffe6e6; color: #8b0000; }
+  button {
+    background: #8b0000;
+    color: white;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin: 40px auto;
+    display: block;
+  }
+  button:hover { background: #6b0000; }
+  #finalResult {
+    text-align: center;
+    font-size: 1.4rem;
+    margin: 30px 0;
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<h1>Renaissance & Scientific Discoveries Quiz – Instant Feedback</h1>
+<p style="text-align:center; color:#555; font-style:italic; margin-bottom:2em;">
+  14 Questions covering the shift to human-centred thinking, scientific developments, key figures & discoveries<br>
+  (Based on textbook pages about Renaissance science, medicine, astronomy & the transition from God-centred to human-centred worldview)
+</p>
+
+<div id="quiz"></div>
+
+<button onclick="showFinalScore()">Finish Quiz & See Total Score</button>
+<div id="finalResult"></div>
+
+<script>
+const questions = [
+  {
+    q: "1. What does the word 'Gothic' refer to in the context of Renaissance architecture?",
+    options: [
+      "a. A style developed by the Goths during the Roman Empire",
+      "b. A negative term used by Renaissance people for medieval 'barbarian' architecture",
+      "c. A new style invented in the Renaissance",
+      "d. Church architecture only used in Germany"
+    ],
+    correct: 1,
+    answerText: "A negative term used by Renaissance people for medieval 'barbarian' architecture"
+  },
+  {
+    q: "2. Who proposed the heliocentric theory, stating that the Sun is the centre of the universe?",
+    options: ["a. Galileo Galilei", "b. Andreas Vesalius", "c. Nicolaus Copernicus", "d. Girolamo Fracastoro"],
+    correct: 2,
+    answerText: "Nicolaus Copernicus"
+  },
+  {
+    q: "3. In his book 'On the Revolutions of the Heavenly Spheres', Copernicus challenged:",
+    options: [
+      "a. The Church's authority on religious matters only",
+      "b. The geocentric model that placed Earth at the centre of the universe",
+      "c. The idea of gravity",
+      "d. The existence of planets"
+    ],
+    correct: 1,
+    answerText: "The geocentric model that placed Earth at the centre of the universe"
+  },
+  {
+    q: "4. Who later used telescopes to observe the universe and supported heliocentrism?",
+    options: ["a. Andreas Vesalius", "b. Galileo Galilei", "c. Girolamo Fracastoro", "d. Nicolaus Copernicus"],
+    correct: 1,
+    answerText: "Galileo Galilei"
+  },
+  {
+    q: "5. The Church integrated many ancient Greek classics with theology because it believed they helped explain:",
+    options: [
+      "a. The solar system",
+      "b. The universe with God as its centre",
+      "c. Human diseases",
+      "d. Modern technology"
+    ],
+    correct: 1,
+    answerText: "The universe with God as its centre"
+  },
+  {
+    q: "6. What was the main reason the Church prohibited the dissection of human bodies in the Middle Ages?",
+    options: [
+      "a. It was too expensive",
+      "b. The human body was considered sacred (God's creation)",
+      "c. There were no tools available",
+      "d. Doctors were not interested"
+    ],
+    correct: 1,
+    answerText: "The human body was considered sacred (God's creation)"
+  },
+  {
+    q: "7. Who carried out dissections of dead human bodies and described the human skeleton, muscles, organs, etc. in detail?",
+    options: ["a. Copernicus", "b. Galileo", "c. Andreas Vesalius", "d. Girolamo Fracastoro"],
+    correct: 2,
+    answerText: "Andreas Vesalius"
+  },
+  {
+    q: "8. Which Renaissance scholar proved the real causes of diseases by experiments and showed that bacteria spread decayed matter?",
+    options: ["a. Andreas Vesalius", "b. Girolamo Fracastoro", "c. Nicolaus Copernicus", "d. Galileo Galilei"],
+    correct: 1,
+    answerText: "Girolamo Fracastoro"
+  },
+  {
+    q: "9. The main change in thinking during the Renaissance and Scientific Revolution was from:",
+    options: [
+      "a. Human-centred to God-centred",
+      "b. God-centred to human-centred",
+      "c. Earth-centred to Moon-centred",
+      "d. Religious to military thinking"
+    ],
+    correct: 1,
+    answerText: "God-centred to human-centred"
+  },
+  {
+    q: "10. Renaissance scholars began to verify ancient theories through:",
+    options: [
+      "a. Only reading Church translations",
+      "b. Observation, research, experiments and the spirit of scientific inquiry",
+      "c. Accepting everything the Church taught",
+      "d. Ignoring ancient Greek classics"
+    ],
+    correct: 1,
+    answerText: "Observation, research, experiments and the spirit of scientific inquiry"
+  },
+  {
+    q: "11. The Church translated many ancient Greek classics, but Renaissance scholars found:",
+    options: [
+      "a. Many differences from the Church's translations",
+      "b. The originals were exactly the same as Church versions",
+      "c. The originals were written in Latin only",
+      "d. No differences at all"
+    ],
+    correct: 0,
+    answerText: "Many differences from the Church's translations"
+  },
+  {
+    q: "12. Heliocentrism refers to the idea that:",
+    options: [
+      "a. Earth is the centre of the universe",
+      "b. The Sun is the centre of the universe",
+      "c. The Moon is the centre",
+      "d. There is no centre"
+    ],
+    correct: 1,
+    answerText: "The Sun is the centre of the universe"
+  },
+  {
+    q: "13. The Renaissance spirit of inquiry challenged:",
+    options: [
+      "a. Only medieval art styles",
+      "b. Traditional Church authority on science and the universe",
+      "c. Trade and commerce",
+      "d. The use of Latin language"
+    ],
+    correct: 1,
+    answerText: "Traditional Church authority on science and the universe"
+  },
+  {
+    q: "14. Discoveries in astronomy (Copernicus, Galileo) and medicine (Vesalius, Fracastoro) were part of:",
+    options: [
+      "a. The decline of science",
+      "b. The development of natural science during the Renaissance",
+      "c. The return to medieval ideas",
+      "d. Only religious reforms"
+    ],
+    correct: 1,
+    answerText: "The development of natural science during the Renaissance"
+  }
+];
+
+let score = 0;
+let answeredCount = 0;
+
+function renderQuiz() {
+  const container = document.getElementById("quiz");
+  questions.forEach((q, index) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = <h3>${q.q}</h3>;
+    
+    const opts = document.createElement("div");
+    opts.className = "options";
+    
+    q.options.forEach((opt, i) => {
+      const label = document.createElement("label");
+      label.innerHTML = <input type="radio" name="q\( {index}" value=" \){i}" onclick="checkAnswer(${index}, ${i})"> ${opt};
+      opts.appendChild(label);
+    });
+    
+    div.appendChild(opts);
+    
+    const feedback = document.createElement("div");
+    feedback.id = feedback${index};
+    feedback.className = "feedback";
+    div.appendChild(feedback);
+    
+    container.appendChild(div);
+  });
+}
+
+function checkAnswer(qIndex, selected) {
+  const q = questions[qIndex];
+  const fb = document.getElementById(feedback${qIndex});
+  fb.style.display = "block";
+
+  if (selected === q.correct) {
+    fb.textContent = "Correct! ✓";
+    fb.className = "feedback correct";
+    score++;
+  } else {
+    fb.textContent = Wrong! The correct answer is: ${q.options[q.correct]} → ${q.answerText};
+    fb.className = "feedback wrong";
+  }
+
+  const radios = document.querySelectorAll(input[name="q${qIndex}"]);
+  radios.forEach(r => r.disabled = true);
+
+  answeredCount++;
+}
+
+function showFinalScore() {
+  const total = questions.length;
+  const percent = Math.round((score / total) * 100);
+  let msg = `You scored \( {score}/ \){total} (${percent}%)! `;
+
+  if (percent >= 85) {
+    msg += "Outstanding! 🎉 You're mastering the Scientific Revolution!";
+  } else if (percent >= 65) {
+    msg += "Great work! 👍 Strong grasp of Renaissance science!";
+  } else if (percent >= 40) {
+    msg += "Good effort! 📚 Review Copernicus, Vesalius & the shift to human-centred thinking!";
+  } else {
+    msg += "Nice try! 💪 Keep going — the key figures and discoveries will become clearer!";
+  }
+
+  document.getElementById("finalResult").textContent = msg;
+  document.getElementById("finalResult").style.display = "block";
+  document.getElementById("finalResult").style.background = percent >= 65 ? "#e6ffe6" : "#fff3e6";
+  document.getElementById("finalResult").style.color = percent >= 65 ? "#006400" : "#8b4513";
+
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+
+window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
