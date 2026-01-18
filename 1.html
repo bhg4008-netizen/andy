@@ -304,7 +304,7 @@
         <header>
             <div>
                 <h1>歷史地理詞彙互動溫習系統</h1>
-                <p class="subtitle">地圖視覺化 • 點擊地點查看詳細資訊</p>
+                <p class="subtitle">地圖視覺化 • 點擊地點查看詳細資訊 • 共40個歷史地點</p>
             </div>
             <div class="controls">
                 <button id="reset-view">重置地圖視圖</button>
@@ -319,7 +319,7 @@
                     <!-- 分類按鈕會由JavaScript動態生成 -->
                 </div>
                 <div class="stats">
-                    <div>已載入 <span id="word-count">0</span> 個地點</div>
+                    <div>已載入 <span id="word-count">40</span> 個地點</div>
                     <div>點擊地點查看詳細資訊</div>
                 </div>
             </div>
@@ -366,7 +366,7 @@
     </div>
 
     <script>
-        // 歷史地理地點資料庫 - 包含座標與詳細資訊
+        // 歷史地理地點資料庫 - 包含座標與詳細資訊（共40個地點）
         const historicalLocations = [
             // 古代文明與帝國 (紅色標記)
             {
@@ -616,251 +616,254 @@
                 lng: 66.0,
                 era: "自然地理特徵",
                 color: "#3498db"
+            },
+            
+            // ================== 新增的20個歷史地點 ==================
+            // 伊斯蘭歷史重要城市
+            {
+                id: 21,
+                english: "Mecca",
+                chinese: "麦加",
+                category: "religion-philosophy",
+                categoryName: "宗教相關地點",
+                description: "伊斯兰教第一圣城，先知穆罕默德的诞生地，所有穆斯林礼拜的朝向（克尔白）所在地，每年举行朝觐（哈吉）。",
+                lat: 21.4225,
+                lng: 39.8262,
+                era: "伊斯兰早期至今",
+                color: "#f39c12"
+            },
+            {
+                id: 22,
+                english: "Damascus",
+                chinese: "大马士革",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "伊斯兰第一个世袭王朝——倭马亚王朝的首都，历史上重要的政治、文化中心，被认为是世界最古老持续有人居住城市之一。",
+                lat: 33.5138,
+                lng: 36.2765,
+                era: "倭马亚王朝时期（661-750年）",
+                color: "#e74c3c"
+            },
+            {
+                id: 23,
+                english: "Córdoba",
+                chinese: "科尔多瓦",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "后倭马亚王朝（西班牙科尔多瓦哈里发国）的首都，中世纪欧洲最大的城市之一，以科尔多瓦大清真寺和学术中心闻名。",
+                lat: 37.8882,
+                lng: -4.7794,
+                era: "后倭马亚王朝时期（929-1031年）",
+                color: "#e74c3c"
+            },
+            {
+                id: 24,
+                english: "Samarkand",
+                chinese: "撒马尔罕",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "丝绸之路上的关键枢纽，帖木儿帝国的都城，以雷吉斯坦广场、比比哈努姆清真寺等宏伟的伊斯兰建筑闻名。",
+                lat: 39.6542,
+                lng: 66.9597,
+                era: "帖木儿帝国时期（1370-1507年）",
+                color: "#e74c3c"
+            },
+            {
+                id: 25,
+                english: "Istanbul (Constantinople)",
+                chinese: "伊斯坦布尔（君士坦丁堡）",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "1453年被奥斯曼帝国征服后成为其首都，圣索菲亚大教堂被改为清真寺，是伊斯兰世界与基督教世界交汇的战略要地。",
+                lat: 41.0082,
+                lng: 28.9784,
+                era: "奥斯曼帝国时期（1453-1922年）",
+                color: "#e74c3c"
+            },
+            {
+                id: 26,
+                english: "Isfahan",
+                chinese: "伊斯法罕",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "萨法维王朝的鼎盛之都，以其波斯风格的伊玛目广场、三十三孔桥和皇家清真寺闻名，被誉为「世界之半」。",
+                lat: 32.6546,
+                lng: 51.6680,
+                era: "萨法维帝国时期（16-18世纪）",
+                color: "#e74c3c"
+            },
+            {
+                id: 27,
+                english: "Kairouan",
+                chinese: "凯鲁万",
+                category: "religion-philosophy",
+                categoryName: "宗教相關地點",
+                description: "北非最古老的伊斯兰圣城，马格里布地区伊斯兰教法学的学术中心，以大清真寺和伊斯兰学术传统闻名。",
+                lat: 35.6770,
+                lng: 10.0972,
+                era: "伊斯兰早期（670年建立）",
+                color: "#f39c12"
+            },
+            {
+                id: 28,
+                english: "Granada",
+                chinese: "格拉纳达",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "伊比利亚半岛上最后一个穆斯林王国（格拉纳达酋长国）的首都，以阿尔罕布拉宫闻名，是伊斯兰建筑艺术的杰作。",
+                lat: 37.1773,
+                lng: -3.5986,
+                era: "奈斯尔王朝时期（1238-1492年）",
+                color: "#e74c3c"
+            },
+            {
+                id: 29,
+                english: "Merv",
+                chinese: "木鹿",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "丝绸之路上的重要绿洲城市，塞尔柱帝国的东部都城，中世纪世界上最大的城市之一，有「城市之王」之称。",
+                lat: 37.6628,
+                lng: 62.1650,
+                era: "塞尔柱帝国时期（11-12世纪）",
+                color: "#e74c3c"
+            },
+            {
+                id: 30,
+                english: "Samarra",
+                chinese: "萨迈拉",
+                category: "religion-philosophy",
+                categoryName: "宗教相關地點",
+                description: "阿拔斯王朝曾短暂定都于此，以螺旋状的马拉维亚宣礼塔闻名，是什叶派第十二伊玛目的隐遁地。",
+                lat: 34.1960,
+                lng: 43.8850,
+                era: "阿拔斯王朝时期（9世纪）",
+                color: "#f39c12"
+            },
+
+            // 古希腊与古罗马历史重要城市
+            {
+                id: 31,
+                english: "Athens",
+                chinese: "雅典",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "西方民主政治与哲学的摇篮，苏格拉底、柏拉图和亚里士多德的故乡，留下了帕特农神庙等不朽遗产。",
+                lat: 37.9838,
+                lng: 23.7275,
+                era: "古典希腊时期（公元前5-4世纪）",
+                color: "#e74c3c"
+            },
+            {
+                id: 32,
+                english: "Rome",
+                chinese: "罗马",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "罗马帝国的中心和心脏，留下了万神殿、罗马广场、斗兽场、图拉真柱等不朽的建筑与工程遗产。",
+                lat: 41.9028,
+                lng: 12.4964,
+                era: "罗马共和国/帝国时期（公元前8世纪-公元5世纪）",
+                color: "#e74c3c"
+            },
+            {
+                id: 33,
+                english: "Alexandria",
+                chinese: "亚历山大",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "由亚历山大大帝建立，以古代世界七大奇迹之一的法罗斯灯塔和著名的亚历山大图书馆闻名，是希腊化时代的学术中心。",
+                lat: 31.2001,
+                lng: 29.9187,
+                era: "希腊化/罗马时期（公元前331年建立）",
+                color: "#e74c3c"
+            },
+            {
+                id: 34,
+                english: "Carthage",
+                chinese: "迦太基",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "地中海的强大海上贸易帝国，与罗马进行了三次布匿战争，最终被罗马摧毁并在原址上重建为罗马城市。",
+                lat: 36.8529,
+                lng: 10.3233,
+                era: "布匿战争时期（公元前264-146年）",
+                color: "#e74c3c"
+            },
+            {
+                id: 35,
+                english: "Constantinople",
+                chinese: "君士坦丁堡",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "罗马帝国皇帝君士坦丁一世建立的新都，后成为拜占庭帝国千年之都，以狄奥多西城墙和圣索菲亚大教堂闻名。",
+                lat: 41.0082,
+                lng: 28.9784,
+                era: "拜占庭帝国时期（330-1453年）",
+                color: "#e74c3c"
+            },
+            {
+                id: 36,
+                english: "Sparta",
+                chinese: "斯巴达",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "以其严酷的军事化社会制度和在希波战争、伯罗奔尼撒战争中的强大陆军而闻名，与雅典形成鲜明对比。",
+                lat: 37.0733,
+                lng: 22.4299,
+                era: "古典希腊时期（公元前5-4世纪）",
+                color: "#e74c3c"
+            },
+            {
+                id: 37,
+                english: "Corinth",
+                chinese: "科林斯",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "连接伯罗奔尼撒半岛和希腊大陆的战略要地，重要的商业中心，以其财富和阿芙洛狄忒神庙闻名。",
+                lat: 37.9375,
+                lng: 22.9272,
+                era: "古典希腊/罗马时期",
+                color: "#e74c3c"
+            },
+            {
+                id: 38,
+                english: "Pompeii",
+                chinese: "庞贝",
+                category: "culture-arts",
+                categoryName: "其他重要地點",
+                description: "因公元79年维苏威火山爆发而被火山灰完整掩埋，为后世提供了古罗马城市生活、艺术和建筑的「时间胶囊」。",
+                lat: 40.7510,
+                lng: 14.4870,
+                era: "罗马帝国时期（公元79年毁灭）",
+                color: "#9b59b6"
+            },
+            {
+                id: 39,
+                english: "Ephesus",
+                chinese: "以弗所",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "小亚细亚的重要希腊城市，以阿尔忒弥斯神庙（古代世界七大奇迹之一）和保存完好的罗马图书馆、剧场遗址著称。",
+                lat: 37.9411,
+                lng: 27.3419,
+                era: "希腊化/罗马时期",
+                color: "#e74c3c"
+            },
+            {
+                id: 40,
+                english: "Byzantium",
+                chinese: "拜占庭",
+                category: "ancient-civilizations",
+                categoryName: "古代文明與帝國",
+                description: "君士坦丁堡的前身，由希腊殖民者建立，控制博斯普鲁斯海峡，具有极佳的战略位置和商业价值。",
+                lat: 41.0082,
+                lng: 28.9784,
+                era: "希腊/罗马早期（公元前7世纪建立）",
+                color: "#e74c3c"
             }
         ];
-// 伊斯兰历史重要城市
-{
-    id: 21,
-    english: "Mecca",
-    chinese: "麦加",
-    category: "religion-philosophy",
-    categoryName: "宗教相關地點",
-    description: "伊斯兰教第一圣城，先知穆罕默德的诞生地，所有穆斯林礼拜的朝向（克尔白）所在地，每年举行朝觐（哈吉）。",
-    lat: 21.4225,
-    lng: 39.8262,
-    era: "伊斯兰早期至今",
-    color: "#f39c12"
-},
-{
-    id: 22,
-    english: "Damascus",
-    chinese: "大马士革",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "伊斯兰第一个世袭王朝——倭马亚王朝的首都，历史上重要的政治、文化中心，被认为是世界最古老持续有人居住城市之一。",
-    lat: 33.5138,
-    lng: 36.2765,
-    era: "倭马亚王朝时期（661-750年）",
-    color: "#e74c3c"
-},
-{
-    id: 23,
-    english: "Córdoba",
-    chinese: "科尔多瓦",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "后倭马亚王朝（西班牙科尔多瓦哈里发国）的首都，中世纪欧洲最大的城市之一，以科尔多瓦大清真寺和学术中心闻名。",
-    lat: 37.8882,
-    lng: -4.7794,
-    era: "后倭马亚王朝时期（929-1031年）",
-    color: "#e74c3c"
-},
-{
-    id: 24,
-    english: "Samarkand",
-    chinese: "撒马尔罕",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "丝绸之路上的关键枢纽，帖木儿帝国的都城，以雷吉斯坦广场、比比哈努姆清真寺等宏伟的伊斯兰建筑闻名。",
-    lat: 39.6542,
-    lng: 66.9597,
-    era: "帖木儿帝国时期（1370-1507年）",
-    color: "#e74c3c"
-},
-{
-    id: 25,
-    english: "Istanbul (Constantinople)",
-    chinese: "伊斯坦布尔（君士坦丁堡）",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "1453年被奥斯曼帝国征服后成为其首都，圣索菲亚大教堂被改为清真寺，是伊斯兰世界与基督教世界交汇的战略要地。",
-    lat: 41.0082,
-    lng: 28.9784,
-    era: "奥斯曼帝国时期（1453-1922年）",
-    color: "#e74c3c"
-},
-{
-    id: 26,
-    english: "Isfahan",
-    chinese: "伊斯法罕",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "萨法维王朝的鼎盛之都，以其波斯风格的伊玛目广场、三十三孔桥和皇家清真寺闻名，被誉为“世界之半”。",
-    lat: 32.6546,
-    lng: 51.6680,
-    era: "萨法维帝国时期（16-18世纪）",
-    color: "#e74c3c"
-},
-{
-    id: 27,
-    english: "Kairouan",
-    chinese: "凯鲁万",
-    category: "religion-philosophy",
-    categoryName: "宗教相關地點",
-    description: "北非最古老的伊斯兰圣城，马格里布地区伊斯兰教法学的学术中心，以大清真寺和伊斯兰学术传统闻名。",
-    lat: 35.6770,
-    lng: 10.0972,
-    era: "伊斯兰早期（670年建立）",
-    color: "#f39c12"
-},
-{
-    id: 28,
-    english: "Granada",
-    chinese: "格拉纳达",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "伊比利亚半岛上最后一个穆斯林王国（格拉纳达酋长国）的首都，以阿尔罕布拉宫闻名，是伊斯兰建筑艺术的杰作。",
-    lat: 37.1773,
-    lng: -3.5986,
-    era: "奈斯尔王朝时期（1238-1492年）",
-    color: "#e74c3c"
-},
-{
-    id: 29,
-    english: "Merv",
-    chinese: "木鹿",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "丝绸之路上的重要绿洲城市，塞尔柱帝国的东部都城，中世纪世界上最大的城市之一，有“城市之王”之称。",
-    lat: 37.6628,
-    lng: 62.1650,
-    era: "塞尔柱帝国时期（11-12世纪）",
-    color: "#e74c3c"
-},
-{
-    id: 30,
-    english: "Samarra",
-    chinese: "萨迈拉",
-    category: "religion-philosophy",
-    categoryName: "宗教相關地點",
-    description: "阿拔斯王朝曾短暂定都于此，以螺旋状的马拉维亚宣礼塔闻名，是什叶派第十二伊玛目的隐遁地。",
-    lat: 34.1960,
-    lng: 43.8850,
-    era: "阿拔斯王朝时期（9世纪）",
-    color: "#f39c12"
-},
 
-// 古希腊与古罗马历史重要城市
-{
-    id: 31,
-    english: "Athens",
-    chinese: "雅典",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "西方民主政治与哲学的摇篮，苏格拉底、柏拉图和亚里士多德的故乡，留下了帕特农神庙等不朽遗产。",
-    lat: 37.9838,
-    lng: 23.7275,
-    era: "古典希腊时期（公元前5-4世纪）",
-    color: "#e74c3c"
-},
-{
-    id: 32,
-    english: "Rome",
-    chinese: "罗马",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "罗马帝国的中心和心脏，留下了万神殿、罗马广场、斗兽场、图拉真柱等不朽的建筑与工程遗产。",
-    lat: 41.9028,
-    lng: 12.4964,
-    era: "罗马共和国/帝国时期（公元前8世纪-公元5世纪）",
-    color: "#e74c3c"
-},
-{
-    id: 33,
-    english: "Alexandria",
-    chinese: "亚历山大",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "由亚历山大大帝建立，以古代世界七大奇迹之一的法罗斯灯塔和著名的亚历山大图书馆闻名，是希腊化时代的学术中心。",
-    lat: 31.2001,
-    lng: 29.9187,
-    era: "希腊化/罗马时期（公元前331年建立）",
-    color: "#e74c3c"
-},
-{
-    id: 34,
-    english: "Carthage",
-    chinese: "迦太基",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "地中海的强大海上贸易帝国，与罗马进行了三次布匿战争，最终被罗马摧毁并在原址上重建为罗马城市。",
-    lat: 36.8529,
-    lng: 10.3233,
-    era: "布匿战争时期（公元前264-146年）",
-    color: "#e74c3c"
-},
-{
-    id: 35,
-    english: "Constantinople",
-    chinese: "君士坦丁堡",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "罗马帝国皇帝君士坦丁一世建立的新都，后成为拜占庭帝国千年之都，以狄奥多西城墙和圣索菲亚大教堂闻名。",
-    lat: 41.0082,
-    lng: 28.9784,
-    era: "拜占庭帝国时期（330-1453年）",
-    color: "#e74c3c"
-},
-{
-    id: 36,
-    english: "Sparta",
-    chinese: "斯巴达",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "以其严酷的军事化社会制度和在希波战争、伯罗奔尼撒战争中的强大陆军而闻名，与雅典形成鲜明对比。",
-    lat: 37.0733,
-    lng: 22.4299,
-    era: "古典希腊时期（公元前5-4世纪）",
-    color: "#e74c3c"
-},
-{
-    id: 37,
-    english: "Corinth",
-    chinese: "科林斯",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "连接伯罗奔尼撒半岛和希腊大陆的战略要地，重要的商业中心，以其财富和阿芙洛狄忒神庙闻名。",
-    lat: 37.9375,
-    lng: 22.9272,
-    era: "古典希腊/罗马时期",
-    color: "#e74c3c"
-},
-{
-    id: 38,
-    english: "Pompeii",
-    chinese: "庞贝",
-    category: "culture-arts",
-    categoryName: "其他重要地點",
-    description: "因公元79年维苏威火山爆发而被火山灰完整掩埋，为后世提供了古罗马城市生活、艺术和建筑的“时间胶囊”。",
-    lat: 40.7510,
-    lng: 14.4870,
-    era: "罗马帝国时期（公元79年毁灭）",
-    color: "#9b59b6"
-},
-{
-    id: 39,
-    english: "Ephesus",
-    chinese: "以弗所",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "小亚细亚的重要希腊城市，以阿尔忒弥斯神庙（古代世界七大奇迹之一）和保存完好的罗马图书馆、剧场遗址著称。",
-    lat: 37.9411,
-    lng: 27.3419,
-    era: "希腊化/罗马时期",
-    color: "#e74c3c"
-},
-{
-    id: 40,
-    english: "Byzantium",
-    chinese: "拜占庭",
-    category: "ancient-civilizations",
-    categoryName: "古代文明與帝國",
-    description: "君士坦丁堡的前身，由希腊殖民者建立，控制博斯普鲁斯海峡，具有极佳的战略位置和商业价值。",
-    lat: 41.0082,
-    lng: 28.9784,
-    era: "希腊/罗马早期（公元前7世纪建立）",
-    color: "#e74c3c"
-},
         // 應用狀態
         let currentCategory = 'all';
         let currentSearch = '';
@@ -891,8 +894,8 @@
 
         // 初始化地圖
         function initMap() {
-            // 創建地圖，中心設在中東地區（大多數歷史地點的位置）
-            map = L.map('map').setView([30, 50], 3);
+            // 創建地圖，中心設在地中海區域（涵蓋歐洲、中東和北非）
+            map = L.map('map').setView([35, 25], 3);
             
             // 添加地圖圖層
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1106,7 +1109,7 @@
             
             // 按鈕事件
             document.getElementById('reset-view').addEventListener('click', function() {
-                map.setView([30, 50], 3);
+                map.setView([35, 25], 3);
                 mapInfo.style.display = 'none';
                 
                 // 清除列表中的active項目
